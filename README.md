@@ -1,4 +1,4 @@
-# KorLex-Read-API
+# KorLex-API
   "한국어 어휘의미망 KorLex 1.5" 데이터베이스는 아래 그림과 같이 4개의 관계형 테이블로 구성된다.
   
   <img src="https://user-images.githubusercontent.com/30927066/147896306-9666df35-eecd-4453-a606-4411ef5d5fc1.png" width="70%" height="70%">
