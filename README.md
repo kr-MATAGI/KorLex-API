@@ -40,13 +40,17 @@
 
   <b>3. tblWN_SEIndex</b>
 
-   | 필드 이름 | 데이터 형식 |
-   | :----: | :----: |
-   | fldWNI_ONTOLOGY | 짧은 텍스트 |
-   | fldWNI_POS | 짧은 텍스트 |
-   | fldWNI_SOFF | 짧은 텍스트 |
-   | fldWNI_WORD | 긴 텍스트 |
-   | fldWNI_SENSEID | 숫자 |
+  - \[tblWN_SEIndex\] 테이블은 신셋과 어휘의 연결 정보를 나타낸다.
+  - 즉, 신셋이 어떤 어휘를 포함하고 있는지, 또는 반대로 어휘가 어느 신셋에 포함되는지를 표현한다.
+  <br> 이 정보는 \[tblWN_SSInfo\] 테이블의 \[fldXml\] 필드에도 있지만(WORD 요소),<br>검색이 힘들기 때문에 검색용 인덱스 테이블로 \[tblWN_SEIndex\]를 사용한다.
+
+   | 필드 이름          | 데이터 형식           | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
+   | :--------------: | :---------------:  | :--------------------: | :----: | :------: | :----------: | :----:  |
+   | fldWNI_ONTOLOGY  | 짧은 텍스트(char)     | 의미망	                 | 7     | No        | Primary Key  | 문자열   |
+   | fldWNI_POS       | 짧은 텍스트(char)     | 품사                     | 1     | No       | Primary Key  | 문자     |
+   | fldWNI_SOFF      | 짧은 텍스트(navrchar) | 신셋 고유번호              | 100   | No       | Primary Key  | 문자열    |
+   | fldWNI_WORD      | 긴 텍스트(navrchar)  | 어형                     | 100   | No       | Primary Key  | 문자열    |
+   | fldWNI_SENSEID   | 숫자(tinyint)       | 어의 번호                 |       | No       | Primary Key  | 숫자     |
 
   <b>4. tblWN_SSInfo</b>
   
