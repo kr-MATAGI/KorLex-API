@@ -7,19 +7,22 @@
 
 ## Table Structure (\[localdb\].mdb)
   <b>1. tblWN_ELEMENTS</b>
-   
-   | 필드 이름     | 데이터 형식       | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
-   | :---------: | :------------: | :--------------------: | :----: | :------: | :----------: | :----:  |
-   | fldWNE_ONTOLOGY | 짧은 텍스트(char) |
-   | fldWNE_POS | 짧은 텍스트 |
-   | fldWNE_SEARCH | 긴 텍스트 |
-   | fldWNE_WORD | 긴 텍스트 |
-   | fldWNE_SENSEID | 숫자 |
-   | fldWNE_FRAMES | 긴 텍스트 |
-   | fldWNE_SOURCES | 긴 텍스트 |
-   | fldWNE_INFO | 긴 텍스트 |
-   | fldWNE_LANG | 짧은 텍스트 |
-   | fldWNE_MORPHINFO | 긴 텍스트 |
+  
+  - \[tblWN_ELEMENTS] 테이블은 어휘 정보를 나타낸다.
+  - key value : fldWNE_ONTOLOGY, fldWNE_POS, fldWNE_WORD, fldWNE_SENSEID
+  
+   | 필드 이름          | 데이터 형식          | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
+   | :-------------:  | :---------------: | :--------------------: | :----: | :------: | :----------: | :----:  |
+   | fldWNE_ONTOLOGY  | 짧은 텍스트(char)    | 의미망                   | 7      | No       | Primary Key. | 문자열    |
+   | fldWNE_POS       | 짧은 텍스트(char)    | 품사                    | 1      | No.      | Primary Key  | 문자      |  
+   | fldWNE_SEARCH    | 긴 텍스트(nvarchar) | 검색어형                  | 100    | No       |              | 문자열    |
+   | fldWNE_WORD      | 긴 텍스트(nvarchar) | 어형                    | 100     | No       | Primary Key  | 문자열    |
+   | fldWNE_SENSEID   | 숫자(tinyint)      | 어의 번호                |         | No       | Primary Key  | 숫자     |
+   | fldWNE_FRAMES    | 긴 텍스트(xml)      | 문형 정보                |         |          |              | xml 문서 | 
+   | fldWNE_SOURCES   | 긴 텍스트(?).       | ?                      | ?       | ?        | ?            | ?       |
+   | fldWNE_INFO      | 긴 텍스트(xml)      | 어의 정보                |         |          |              | xml 문서 |
+   | fldWNE_LANG      | 짧은 텍스트(char)   | 언어                    | 2       |          |              | 문자열    |
+   | fldWNE_MORPHINFO | 긴 텍스트(?)        | ?                      |         |          |             |          | 
 
 
   <b>2. tblWN_Relindex</b>
@@ -46,17 +49,19 @@
    | fldWNI_SENSEID | 숫자 |
 
   <b>4. tblWN_SSInfo</b>
+  
+  - \[tblWN_SSInfo\] 테이블은 신셋(synonym set: 동의어 집합)에 대한 정보를 나타낸댜. <br> 신셋은 각 품사별로 8자리의 고유번호를 가진다.
+  - key value : fldOntology, fldPos, fldSoff
 
    | 필드 이름     | 데이터 형식       | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
    | :---------: | :------------: | :--------------------: | :----: | :------: | :----------: | :----:  |
-   | fldOntology | 짧은 텍스트(char) | 의미망                   | 7     |  NO       | Primary Key  | 문자열   |
-   | fldPos      | 짧은 텍스트(char) | 품사                    | 1      | NO       | Primary Key  | 문자     |
-   | fldSoff     | 짧은 텍스트(char) | 신셋 고유번호             | 8      | NO       | Primary Key   | 문자열   |
-   | fldLexFn    | 짧은 텍스트(char) | Lexical life <br> 도메인 | 20    | NO       |               | 문자열    |
+   | fldOntology | 짧은 텍스트(char) | 의미망                   | 7     |  No       | Primary Key  | 문자열   |
+   | fldPos      | 짧은 텍스트(char) | 품사                    | 1      | No       | Primary Key  | 문자     |
+   | fldSoff     | 짧은 텍스트(char) | 신셋 고유번호             | 8      | No       | Primary Key   | 문자열   |
+   | fldLexFn    | 짧은 텍스트(char) | Lexical life <br> 도메인 | 20    | No       |               | 문자열    |
    | fldXml      | 긴 텍스트(xml)   | 신셋 정보                 |       |          |               | xml 문서 |
 
-  - \[tblWN_SSInfo\] 테이블은 신셋(synonym set: 동의어 집합)에 대한 정보를 나타낸댜. <br> 신셋은 각 품사별로 8자리의 고유번호를 가진다.
-  - key value : fldOntology, fldPos, fldSoff
+  
   - 다음은 fldXml이 나타내는 요소와 의미 설명이다.
 
    | 요소명        | 설명                                                                                                |
