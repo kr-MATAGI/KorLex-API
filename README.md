@@ -3,6 +3,7 @@
   
   <img src="https://user-images.githubusercontent.com/30927066/147896306-9666df35-eecd-4453-a606-4411ef5d5fc1.png" width="70%" height="70%">
 
+  - 품사는 명사(n), 동사(v), 형용사(a), 부사(r)로 나뉜다.
 
 ## Table Structure (\[localdb\].mdb)
   <b>1. tblWN_ELEMENTS</b>
@@ -53,3 +54,12 @@
    | fldSoff     | 짧은 텍스트(char) | 신셋 고유번호             | 8      | NO       | Primary Key   | 문자열   |
    | fldLexFn    | 짧은 텍스트(char) | Lexical life <br> 도메인 | 20    | NO       |               | 문자열    |
    | fldXml      | 긴 텍스트(xml)   | 신셋 정보                 |       |          |               | xml 문서 |
+
+  - 다음은 fldXml이 나타내는 요소와 의미 설명이다.
+   | 요소명       | 설명 |
+   | :---------: | :----: |
+   | SYN         | 하나의 의미(substance)를 의미한다. <br> 내부의 다수의 pointer 정보와 어휘정보, 도메인 정보, 설명문 정보를 포함할 수 있다. |
+   | WORD        | 의미를 표식(시?)하는 어휘정보다. 각각 sense의 번호를 포함한다. |
+   | POINTER     | 타의미와 관계를 나타낸다. <br> 하나 이상이 포함될 수 있으며, 특정한 심벌과 대상 의미의 번호, 품사 정보를 포함한다. |
+   | GLOSS       | 어휘의 의미를 설명할 수 있는 일반적인 내용을 담는다. |
+   | domainblock | 도메인 정보를 담는다. |
