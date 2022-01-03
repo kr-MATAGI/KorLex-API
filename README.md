@@ -54,6 +54,23 @@
     - 기본적으로 영어 워드넷 PWN의 심벌과 동일하며 예외적으로 상위어와 하위어는 각각 "parent"와 "child"를 사용한다.
     - 실제 테이블 자료에는 아래 표에 없는 "@", "~" 등이 있지만 영어 워드넷과의 호환성을 위해 남아있는 자료이므로<br>
     "parent"와 "child"를 사용하는 것이 정확하다.
+    <br>
+    
+    + 명사
+
+    <img src="https://user-images.githubusercontent.com/30927066/147902881-00c2f04e-6736-473e-924c-6edc0e9b4152.png" width="50%" height="60%">
+    
+    + 동사
+    
+    <img src="https://user-images.githubusercontent.com/30927066/147902950-f68f7eb8-5685-4e26-a482-d01ade6a51b2.png" width="50%" height="60%">
+    
+    + 형용사
+
+    <img src="https://user-images.githubusercontent.com/30927066/147902979-94d17f4f-9a6a-490a-9719-6ee1e7389b97.png" width="50%" height="60%">
+
+    + 부사
+    
+    <img src="https://user-images.githubusercontent.com/30927066/147903001-6de4c1a4-4781-4736-9e4a-d5556970606e.png" width="50%" height="60%">
 
   <b>3. tblWN_SEIndex</b>
 
