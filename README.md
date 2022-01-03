@@ -8,9 +8,9 @@
 ## Table Structure (\[localdb\].mdb)
   <b>1. tblWN_ELEMENTS</b>
    
-   | 필드 이름 | 데이터 형식 |
-   | :----: | :----: |
-   | fldWNE_ONTOLOGY | 짧은 텍스트 |
+   | 필드 이름     | 데이터 형식       | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
+   | :---------: | :------------: | :--------------------: | :----: | :------: | :----------: | :----:  |
+   | fldWNE_ONTOLOGY | 짧은 텍스트(char) |
    | fldWNE_POS | 짧은 텍스트 |
    | fldWNE_SEARCH | 긴 텍스트 |
    | fldWNE_WORD | 긴 텍스트 |
@@ -55,6 +55,8 @@
    | fldLexFn    | 짧은 텍스트(char) | Lexical life <br> 도메인 | 20    | NO       |               | 문자열    |
    | fldXml      | 긴 텍스트(xml)   | 신셋 정보                 |       |          |               | xml 문서 |
 
+  - \[tblWN_SSInfo\] 테이블은 신셋(synonym set: 동의어 집합)에 대한 정보를 나타낸댜. <br> 신셋은 각 품사별로 8자리의 고유번호를 가진다.
+  - key value : fldOntology, fldPos, fldSoff
   - 다음은 fldXml이 나타내는 요소와 의미 설명이다.
 
    | 요소명        | 설명                                                                                                |
