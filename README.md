@@ -25,24 +25,42 @@
    | fldWNE_MORPHINFO | 긴 텍스트(?)        | ?                      |         |          |             |          | 
 
 
-  <b>2. tblWN_Relindex</b>
+  <b>2. tblWN_RelIndex</b>
+ 
+  - \[tblWN_RelIndex\]테이블은 \[신셋-신셋\] 관계 혹은 \[어휘-어휘\] 관계를 나타낸다.
+  <br>\[신셋-어휘\] 관계는 존재하지 않는다.
+  - \[어휘-어휘\] 관계일 때는 fldWNIR_ELEMENT 필드가 어휘를 <br>
+  fldWNIR_SENSEID 필드가 어휘 ID를 나타낸다.
+  - \[신셋-신셋\] 관계일 때는 fldWNIR_ELEMENT 필드가 신셋번호를 나타내고 <br>
+  fldWNIR_SENSEID 필드는 0이 된다.
+  - key value : 모든 필드
+  <br>
 
-   | 필드 이름 | 데이터 형식 |
-   | :----: | :----: |
-   | fldWNIR_ONTOLOGY | 짧은 텍스트 |
-   | fldWNIR_POS | 짧은 텍스트 |
-   | fldWNIR_ELEMENT | 긴 텍스트 |
-   | fldWNIR_SENSEID | 숫자 |
-   | fldWNIR_RELATION | 긴 텍스트 |
-   | fldWNIR_TRGPOS | 짧은 텍스트 |
-   | fldWNIR_TRGELEMENT | 긴 텍스트 |
-   | fldWNIR_TRGSENSEID | 숫자 |
+   | 필드 이름            | 데이터 형식          | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
+   | :----------------: | :---------------: | :--------------------: | :----: | :------: | :----------: | :----:  |
+   | fldWNIR_ONTOLOGY   | 짧은 텍스트(char)    | 의미망                   | 7     | No        | Primary Key  | 문자열   |
+   | fldWNIR_POS        | 짧은 텍스트(char)    | 품사                    | 1      | No       | Primary Key   | 문자    |
+   | fldWNIR_ELEMENT    | 긴 텍스트(nvarchar) | 어형                    | 100    | No       | Primary Key   | 문자열   |
+   | fldWNIR_SENSEID    | 숫자(smallint)     | 어의 번호                |        | No       | Primary Key   | 숫자    |
+   | fldWNIR_RELATION   | 긴 텍스트(nvarchar) | 의미 관계                | 20     | No       | Primary Key   | 문자열   |
+   | fldWNIR_TRGPOS     | 짧은 텍스트(char)    | target 품사             | 1     | No        | Primary Key   | 문자    |
+   | fldWNIR_TRGELEMENT | 긴 텍스트(nvarchar) | target 어형             | 100   | No        | Primary Key   | 문자열   |
+   | fldWNIR_TRGSENSEID | 숫자(smallint)     | target 어의 번호         |       | No        | Primary Key   | 숫자    |
+   
+   
+  + 관계 심벌
+    - 아래 테이블의 \[fldWNIR_RELATION\] 필드는 KorLex의 의미 관계를 나타내는 심벌로서<br>
+    다음 표와 같이 정의된다. 
+    - 기본적으로 영어 워드넷 PWN의 심벌과 동일하며 예외적으로 상위어와 하위어는 각각 "parent"와 "child"를 사용한다.
+    - 실제 테이블 자료에는 아래 표에 없는 "@", "~" 등이 있지만 영어 워드넷과의 호환성을 위해 남아있는 자료이므로<br>
+    "parent"와 "child"를 사용하는 것이 정확하다.
 
   <b>3. tblWN_SEIndex</b>
 
   - \[tblWN_SEIndex\] 테이블은 신셋과 어휘의 연결 정보를 나타낸다.
   - 즉, 신셋이 어떤 어휘를 포함하고 있는지, 또는 반대로 어휘가 어느 신셋에 포함되는지를 표현한다.
   <br> 이 정보는 \[tblWN_SSInfo\] 테이블의 \[fldXml\] 필드에도 있지만(WORD 요소),<br>검색이 힘들기 때문에 검색용 인덱스 테이블로 \[tblWN_SEIndex\]를 사용한다.
+  - key value : 모든 필드
 
    | 필드 이름          | 데이터 형식           | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
    | :--------------: | :---------------:  | :--------------------: | :----: | :------: | :----------: | :----:  |
