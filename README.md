@@ -46,10 +46,10 @@
 
   <b>4. tblWN_SSInfo</b>
 
-   | 필드 이름 | 데이터 형식 |
-   | :----: | :----: |
-   | fldOntology | 짧은 텍스트 |
-   | fldPos | 짧은 텍스트 |
-   | fldSoff | 짧은 텍스트 |
-   | fldLexFn | 짧은 텍스트 |
-   | fldXml | 긴 텍스트 |
+   | 필드 이름     | 데이터 형식       | 의 미                   | 길 이   | IS NULL  | Key          | 리스트    |
+   | :---------: | :------------: | :--------------------: | :----: | :------: | :----------: | :----:  |
+   | fldOntology | 짧은 텍스트(char) | 의미망                   | 7     |  NO       | Primary Key  | 문자열   |
+   | fldPos      | 짧은 텍스트(char) | 품사                    | 1      | NO       | Primary Key  | 문자     |
+   | fldSoff     | 짧은 텍스트(char) | 신셋 고유번호             | 8      | NO       | Primary Key   | 문자열   |
+   | fldLexFn    | 짧은 텍스트(char) | Lexical life <br> 도메인 | 20    | NO       |               | 문자열    |
+   | fldXml      | 긴 텍스트(xml)   | 신셋 정보                 |       |          |               | xml 문서 |
