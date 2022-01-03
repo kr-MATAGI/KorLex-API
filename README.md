@@ -22,7 +22,7 @@
    | fldWNE_SOURCES   | 긴 텍스트(?).       | ?                      | ?       | ?        | ?            | ?       |
    | fldWNE_INFO      | 긴 텍스트(xml)      | 어의 정보                |         |          |              | xml 문서 |
    | fldWNE_LANG      | 짧은 텍스트(char)   | 언어                    | 2       |          |              | 문자열    |
-   | fldWNE_MORPHINFO | 긴 텍스트(?)        | ?                      |         |          |             |          | 
+   | fldWNE_MORPHINFO | 긴 텍스트(?)        | ?                      | ?       | ?        | ?            | ?       | 
 
 
   <b>2. tblWN_RelIndex</b>
