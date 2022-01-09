@@ -36,6 +36,17 @@ print("QUERY_3:", query_3)
 print(rows, "\n")
 
 xml_str = rows["fldXml"][0]
-print("XML:", xml_str)
+print("XML:", xml_str, "\n")
+
+## 4. tblWN_RelIndex
+query_4_1 = "SELECT * FROM [tblWN_RelIndex] WHERE [fldWNIR_ONTOLOGY] = 'KORLEX' AND [fldWNIR_POS] = 'n' AND fldWNIR_ELEMENT LIKE '07949563'"
+rows = pd.read_sql(query_4_1, conn)
+print("QUERY_4_1:", query_4_1)
+print(rows, "\n")
+
+query_4_2 = "SELECT * FROM [tblWN_RelIndex] WHERE [fldWNIR_ONTOLOGY] = 'KORLEX' AND [fldWNIR_TRGPOS] = 'n' AND fldWNIR_TRGELEMENT LIKE '07949563'"
+rows = pd.read_sql(query_4_2, conn)
+print("QUERY_4_2:", query_4_2)
+print(rows, "\n")
 
 conn.close()
