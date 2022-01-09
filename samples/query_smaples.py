@@ -13,8 +13,29 @@ conn = pyodbc.connect('DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ='+M
 cursor = conn.cursor()
 
 ## 1. [tblWN_ELEMENTS]
-test_query_1 = "SELECT * FROM [tblWN_ELEMENTS] WHERE [fldWNE_ONTOLOGY] = 'KORLEX' AND [fldWNE_POS] = 'n' AND [fldWNE_SEARCH] like '데이터'"
-rows = pd.read_sql(test_query_1, conn)
-print(rows)
+query_1 = "SELECT * FROM [tblWN_ELEMENTS] WHERE [fldWNE_ONTOLOGY] = 'KORLEX' AND [fldWNE_POS] = 'n' AND [fldWNE_SEARCH] like '데이터'"
+rows = pd.read_sql(query_1, conn)
+print("QUERY_1:", query_1)
+print(rows, "\n")
+
+## 2. tblWN_SEIndex
+query_2_1 = "SELECT * FROM [tblWN_SEIndex] WHERE [fldWNI_ONTOLOGY] = 'KORLEX' AND [fldWNI_POS] = 'n' AND fldWNI_WORD like '데이터'"
+rows = pd.read_sql(query_2_1, conn)
+print("QUERY_2_1:", query_2_1)
+print(rows, "\n")
+
+query_2_2 = "SELECT * FROM [tblWN_SEIndex] WHERE [fldWNI_ONTOLOGY] = 'KORLEX' AND [fldWNI_POS] = 'n' AND fldWNI_SOFF LIKE '07949563'"
+rows = pd.read_sql(query_2_2, conn)
+print("QUERY_2_2:", query_2_2)
+print(rows, "\n")
+
+## 3. tblWN_SSInfo
+query_3 = "SELECT * FROM [tblWN_SSInfo] WHERE [fldOntology] = 'KORLEX' AND [fldPos] = 'n' AND fldSoff like '07949563'"
+rows = pd.read_sql(query_3, conn)
+print("QUERY_3:", query_3)
+print(rows, "\n")
+
+xml_str = rows["fldXml"][0]
+print("XML:", xml_str)
 
 conn.close()
