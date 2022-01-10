@@ -195,6 +195,7 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
 
     # search target info (search synset)
     search_target_info = search_sibling_nodes(conn=conn, word=word, mdb_path=mdb_path)
+    print(search_target_info)
 
     # Make Tree (format. json)
     for st_info in search_target_info:
@@ -204,6 +205,9 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
         origin_json = KorLexJson(synset=[])
         origin_json.synset = [(st_info.word, st_info.senseId)]
         origin_json.soff = st_info.soff
+
+        if 0 >= len(search_target_synset.parent_list):
+            parent_json_data_list.append([origin_json])
         for target_parent in search_target_synset.parent_list:
             parent_json_data = []
             parent_json_data.append(origin_json)
@@ -219,13 +223,17 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
                 parent_json_data.append(korlex_json)
 
                 # Search relation index
+                prev_target_soff = target_soff
                 target_soff = serach_relation_index_info(conn=conn, soff=target_soff)
+                if prev_target_soff == target_soff:
+                    break # Stop Loop
             parent_json_data_list.append(parent_json_data)
         ret_json_rsrc_list.append(parent_json_data_list)
 
     # DB close
     conn.close()
 
+    print(ret_json_rsrc_list)
     return ret_json_rsrc_list
 
 
@@ -239,6 +247,7 @@ def make_korlex_result_json(json_rsrc_list:list):
 
     # Make Dict
     for json_rsrc in json_rsrc_list:
+        print(json_rsrc)
         if "" == json_dict["search_word"]:
             json_dict["search_word"] = json_rsrc[0].synset[0][0]
             json_dict["search_senseid"] = str(json_rsrc[0].synset[0][1])
@@ -250,11 +259,11 @@ def make_korlex_result_json(json_rsrc_list:list):
             }
 
             for word in rsrc_item.synset:
-                word_dict = {
+                wordset_dict = {
                     "word": word[0],
                     "senseid": word[1]
                 }
-                item_dict["word_sets"].append(word_dict)
+                item_dict["word_sets"].append(wordset_dict)
             json_dict["results"].append(item_dict)
 
     ret_json = json.dumps(json_dict, ensure_ascii=False).encode("utf8")
@@ -265,8 +274,9 @@ def make_korlex_result_json(json_rsrc_list:list):
 if "__main__" == __name__:
     mdb_path = "../db/20170726_KorLexDB.mdb"
 
-    json_rsc_list = make_korlex_tree_resource(word="사과", mdb_path=mdb_path)
+    json_rsc_list = make_korlex_tree_resource(word="먹다", mdb_path=mdb_path)
 
     for json_rsrc in json_rsc_list:
         test_res = make_korlex_result_json(json_rsrc)
         print(test_res)
+        print()
