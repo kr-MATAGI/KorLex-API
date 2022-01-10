@@ -1,11 +1,13 @@
 import pyodbc
 import pandas as pd
 from xml.etree import ElementTree as elemTree
+import json
 
 ## Not Built-in
 from korlexDef import *
 
 
+### METHOD ###
 def _local_db_connect(mdb_path:str=None):
     if mdb_path is None:
         print("[_local_db_connect]ERR - mdb_path is None !")
@@ -178,53 +180,58 @@ def search_soff_childern(conn:pyodbc.Connection=None, mdb_path:str=None, soff:st
 
     return ret_child_list
 
-def make_korlex_word_tree(word:str=None, mdb_path:str=None):
-    ret_tree_json_list = []
+def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
+    ret_json_rsrc_list = []
 
     if word is None:
         print("[make_korlex_word_tree]ERR - Word is None !")
-        return ret_tree_json_list
+        return ret_json_rsrc_list
 
     # DB
     conn, cursor = _local_db_connect(mdb_path=mdb_path)
     if (conn is None) or (cursor is None):
         print("[make_korlex_word_tree]ERR - Plz check mdb_path:", mdb_path)
-        return ret_tree_json_list
+        return ret_json_rsrc_list
 
     # search target info (search synset)
     search_target_info = search_sibling_nodes(conn=conn, word=word, mdb_path=mdb_path)
 
     # Make Tree (format. json)
     for st_info in search_target_info:
-        korlex_tree = KorLexTreeJson()
-        korlex_tree.element_info = st_info
-
         search_target_synset = search_synset_info(conn=conn, soff=st_info.soff, pos=st_info.pos)
 
+        parent_json_data_list = []
+        origin_json = KorLexJson(synset=[])
+        origin_json.synset = [(st_info.word, st_info.senseId)]
+        origin_json.soff = st_info.soff
         for target_parent in search_target_synset.parent_list:
+            parent_json_data = []
+            parent_json_data_list.append(origin_json)
+
             target_soff = target_parent
             target_pos = st_info.pos
             while None != target_soff:
                 # Search Synset
                 sysnset_data = search_synset_info(conn=conn, soff=target_soff, pos=target_pos)
-                print(sysnset_data.word_list, target_soff)
+                korlex_json = KorLexJson(synset=[])
+                korlex_json.synset = sysnset_data.word_list
+                korlex_json.soff = target_soff
+                parent_json_data.append(korlex_json)
 
                 # Search relation index
                 target_soff = serach_relation_index_info(conn=conn, soff=target_soff)
+            parent_json_data_list.append(parent_json_data)
+        ret_json_rsrc_list.append(parent_json_data_list)
 
+    # DB close
     conn.close()
 
-    return ret_tree_json_list
+    return ret_json_rsrc_list
 
-
-# TEST
+### TEST ###
 if "__main__" == __name__:
     mdb_path = "../db/20170726_KorLexDB.mdb"
 
-    a = make_korlex_word_tree(word="사과", mdb_path=mdb_path)
-
-
-    # test_ss = search_synset_info(soff="07267116", pos="n", mdb_path=mdb_path)
-    # print(test_ss.word_list)
-    # print(test_ss.parent_list)
-    # print(test_ss.child_list)
+    json_rsc_list = make_korlex_tree_resource(word="사과", mdb_path=mdb_path)
+    for j in json_rsc_list:
+        print(j)

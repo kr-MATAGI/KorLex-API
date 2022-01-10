@@ -46,6 +46,6 @@ class SynsetData:
     child_list: list()
 
 @dataclass
-class KorLexTreeJson:
-    element_info: SiblingNode = None
-    json_data: str = None
+class KorLexJson:
+    synset: list()
+    soff: str = ""
