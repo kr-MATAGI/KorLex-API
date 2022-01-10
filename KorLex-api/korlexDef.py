@@ -9,13 +9,20 @@ class KORLEX_QUERY(Enum):
         AND fldWNI_WORD like '%s';
     """
 
-    SEARCH_SSINFO = """
+    SEARCH_POS_SSINFO = """
         SELECT * FROM 
         tblWN_SSInfo 
         WHERE fldOntology = 'KORLEX' 
         AND fldPOS = '%s' 
         AND fldSoff like '%s';
     """
+
+    SEARCH_SSINFO = """
+            SELECT * FROM 
+            tblWN_SSInfo 
+            WHERE fldOntology = 'KORLEX' 
+            AND fldSoff like '%s';
+        """
 
     SEARCH_REL_IDX = """
         SELECT * FROM 
@@ -31,6 +38,12 @@ class SiblingNode:
     soff: str = None
     word: str = None
     senseId: str = None
+
+@dataclass
+class SynsetData:
+    word_list: list()
+    parent_list: list()
+    child_list: list()
 
 @dataclass
 class KorLexTreeJson:
