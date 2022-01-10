@@ -25,7 +25,6 @@
   ~~~
   
 ### Results Inner Format
-  - 웹 출력과 동일하게 "KorLex" 노드를 제외한 첫 노드부터 데이터가 입력되어있다.
   ~~~json
     {
       "word_set": array,
