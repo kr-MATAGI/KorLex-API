@@ -206,7 +206,7 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
         origin_json.soff = st_info.soff
         for target_parent in search_target_synset.parent_list:
             parent_json_data = []
-            parent_json_data_list.append(origin_json)
+            parent_json_data.append(origin_json)
 
             target_soff = target_parent
             target_pos = st_info.pos
@@ -228,10 +228,46 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
 
     return ret_json_rsrc_list
 
+
+def make_korlex_result_json(json_rsrc_list:list):
+    json_dict = {
+        "ontology": "korlex",
+        "search_word": "",
+        "search_senseid": "",
+        "results": []
+    }
+
+    # Make Dict
+    for json_rsrc in json_rsrc_list:
+        if "" == json_dict["search_word"]:
+            json_dict["search_word"] = json_rsrc[0].synset[0][0]
+            json_dict["search_senseid"] = json_rsrc[0].synset[0][1]
+
+        json_rsrc.reverse()
+        for rsrc_item in json_rsrc:
+            item_dict = {
+                "word_sets": [],
+                "soff": rsrc_item.soff
+            }
+
+            for word in rsrc_item.synset:
+                word_dict = {
+                    "word": word[0],
+                    "senseid": word[1]
+                }
+                item_dict["word_sets"].append(word_dict)
+            json_dict["results"].append(item_dict)
+
+    ret_json = json.dumps(json_dict, ensure_ascii=False).encode("utf8")
+    print(ret_json.decode())
+
 ### TEST ###
 if "__main__" == __name__:
     mdb_path = "../db/20170726_KorLexDB.mdb"
 
-    json_rsc_list = make_korlex_tree_resource(word="사과", mdb_path=mdb_path)
-    for j in json_rsc_list:
-        print(j)
+    # json_rsc_list = make_korlex_tree_resource(word="사과", mdb_path=mdb_path)
+    # print(json_rsc_list)
+
+    test_rsrc = [[KorLexJson(synset=[('사과', 2)], soff='07267116'), KorLexJson(synset=[('실과', '1'), ('과일', '1'), ('과실', '2')], soff='07234431'), KorLexJson(synset=[('청과물', '1')], soff='07234211'), KorLexJson(synset=[('고형 식품', '1')], soff='07089248'), KorLexJson(synset=[('고체', '2')], soff='14193490'), KorLexJson(synset=[('성분', '1'), ('물질', '1')], soff='00017572'), KorLexJson(synset=[('실체', '1'), ('개체', '1')], soff='00001740')], [KorLexJson(synset=[('사과', 2)], soff='07267116'), KorLexJson(synset=[('이과', '2')], soff='12386033'), KorLexJson(synset=[('열매', '1'), ('과실', '3')], soff='12382403'), KorLexJson(synset=[('생식기', '1'), ('생식기관', '1')], soff='10930823'), KorLexJson(synset=[('식물기관', '1')], soff='12336912'), KorLexJson(synset=[('식물구조', '1')], soff='12336213'), KorLexJson(synset=[('자연물', '1')], soff='00017087'), KorLexJson(synset=[('물체', '1'), ('물건', '1')], soff='00016236'), KorLexJson(synset=[('실체', '1'), ('개체', '1')], soff='00001740')]]
+    make_korlex_result_json(test_rsrc)
+
