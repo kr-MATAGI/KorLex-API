@@ -241,7 +241,7 @@ def make_korlex_result_json(json_rsrc_list:list):
     for json_rsrc in json_rsrc_list:
         if "" == json_dict["search_word"]:
             json_dict["search_word"] = json_rsrc[0].synset[0][0]
-            json_dict["search_senseid"] = json_rsrc[0].synset[0][1]
+            json_dict["search_senseid"] = str(json_rsrc[0].synset[0][1])
 
         json_rsrc.reverse()
         for rsrc_item in json_rsrc:
