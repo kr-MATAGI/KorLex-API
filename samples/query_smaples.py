@@ -13,16 +13,18 @@ conn = pyodbc.connect('DRIVER={Microsoft Access Driver (*.mdb, *.accdb)};DBQ='+M
 cursor = conn.cursor()
 
 ## 1. [tblWN_ELEMENTS]
-query_1 = "SELECT * FROM [tblWN_ELEMENTS] WHERE [fldWNE_ONTOLOGY] = 'KORLEX' AND [fldWNE_POS] = 'n' AND [fldWNE_SEARCH] like '데이터'"
+query_1 = "SELECT * FROM [tblWN_ELEMENTS] WHERE [fldWNE_ONTOLOGY] = 'KORLEX' AND [fldWNE_POS] = 'n' AND [fldWNE_SEARCH] like '사과'"
 rows = pd.read_sql(query_1, conn)
 print("QUERY_1:", query_1)
-print(rows, "\n")
+print(rows.values)
 
 ## 2. tblWN_SEIndex
-query_2_1 = "SELECT * FROM [tblWN_SEIndex] WHERE [fldWNI_ONTOLOGY] = 'KORLEX' AND [fldWNI_POS] = 'n' AND fldWNI_WORD like '데이터'"
+query_2_1 = "SELECT * FROM [tblWN_SEIndex] WHERE [fldWNI_ONTOLOGY] = 'KORLEX' AND [fldWNI_POS] = 'n' AND fldWNI_WORD like '사과'"
 rows = pd.read_sql(query_2_1, conn)
 print("QUERY_2_1:", query_2_1)
-print(rows, "\n")
+print(rows)
+exit()
+
 
 query_2_2 = "SELECT * FROM [tblWN_SEIndex] WHERE [fldWNI_ONTOLOGY] = 'KORLEX' AND [fldWNI_POS] = 'n' AND fldWNI_SOFF LIKE '07949563'"
 rows = pd.read_sql(query_2_2, conn)
