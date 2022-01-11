@@ -24,6 +24,14 @@
    | fldWNE_LANG      | 짧은 텍스트(char)   | 언어                    | 2       |          |              | 문자열    |
    | fldWNE_MORPHINFO | 긴 텍스트(?)        | ?                      | ?       | ?        | ?            | ?       | 
 
+  - Field Domain Set
+    | 필드 이름          | Domain                                          |
+    | :---------------: | :---------------------------------------------: |
+    | fldWNE_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET |
+    | fldWNE_POS        | a, n, r, v                                      |
+    | fldWNE_SENSEID    | 1 ~ 59 Integer                                  |
+    | fldWNE_LANG       | EN, fr, jp, ko                                  |
+
 
   <b>2. tblWN_RelIndex</b>
  
@@ -47,6 +55,14 @@
    | fldWNIR_TRGELEMENT | 긴 텍스트(nvarchar) | target 어형             | 100   | No        | Primary Key   | 문자열   |
    | fldWNIR_TRGSENSEID | 숫자(smallint)     | target 어의 번호         |       | No        | Primary Key   | 숫자    |
    
+  - Field Domain Set
+    | 필드 이름            | Domain                                          |
+    | :---------------:  | :---------------------------------------------: |
+    | fldWNIR_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, WORDNET          |
+    | fldWNIR_POS        | a, n, r, v                                      |
+    | fldWNIR_SENSEID    | 0 ~ 57 Integer                                  |
+    | fldWNIR_TRGPOS     | a, n, r, v                                      |
+    | fldWNIR_TRGSENSEID | 0 ~ 57 Integer
    
   + 관계 심벌
     - 아래 테이블의 \[fldWNIR_RELATION\] 필드는 KorLex의 의미 관계를 나타내는 심벌로서<br>
