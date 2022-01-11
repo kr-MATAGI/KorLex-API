@@ -133,9 +133,9 @@
     | fldONTOLOGY        | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
     | fldPOS             | a, n, r, v                                       |
     | fldLexFn           | adj, adj.{all, pert, ppl}                        |
-    |                    | adv.all                                          |
-    |                    | noun, noun.{act, animal, artifact, attribute, body, cognition, communication, event, feeling, food, group, hetercompound, location, motive, object, person, phenomenon, plant, possession, process, quantity, relation, shape, state, substance, time, Tops|
-    |                    | verb.{body, change, cognition, communication, competition, consumption, contact, creation, emotion, motion, preception, possession, social, stative, weather |
+    | fldLexFn           | adv.all                                          |
+    | fldLexFn           | noun, noun.{act, animal, artifact, attribute, body, cognition, communication, event, feeling, food, group, hetercompound, location, motive, object, person, phenomenon, plant, possession, process, quantity, relation, shape, state, substance, time, Tops|
+    | fldLexFn           | verb.{body, change, cognition, communication, competition, consumption, contact, creation, emotion, motion, preception, possession, social, stative, weather} |
   
   - 다음은 fldXml이 나타내는 요소와 의미 설명이다.
 
