@@ -15,7 +15,7 @@
   
 ## Json Format
 ### Root Format
-  ~~~json
+  ~~~python
     {
       "korlex": string (defulat: korlex),
       "search_word": string (Not NULL)
@@ -25,7 +25,7 @@
   ~~~
   
 ### Results Inner Format
-  ~~~json
+  ~~~python
     {
       "word_set": array,
       "soff": string (integer type)
@@ -33,7 +33,7 @@
   ~~~
 
 ### Wordset Inner Format
-  ~~~json
+  ~~~python
   {
     "word": string
     "senseid": string (integer type)
