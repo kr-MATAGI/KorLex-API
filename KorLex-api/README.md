@@ -9,6 +9,9 @@
   - [Microsoft Access Database Engine 2016 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=54920) 링크에서 드라이버를 다운로드하여 설치.
   - python을 이용해서인지 웹 보다 속도면에서 느림.
 
+  ### Cython
+    - Cypthon을 사용하여도 '먹다'를 검색했을 시 수행 속도면에서는 차이 없었음(약 27초)
+
 ## Data Structure
   - korlexDef.py 참조
   
