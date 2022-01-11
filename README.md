@@ -26,12 +26,12 @@
 
   - Field Domain Set
   
-    | 필드 이름          | Domain                                          |
-    | :---------------: | :---------------------------------------------: |
-    | fldWNE_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET |
-    | fldWNE_POS        | a, n, r, v                                      |
-    | fldWNE_SENSEID    | 1 ~ 59 Integer                                  |
-    | fldWNE_LANG       | EN, fr, jp, ko                                  |
+  | 필드 이름           | Domain                                          |
+  | :---------------: | :---------------------------------------------: |
+  | fldWNE_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET |
+  | fldWNE_POS        | a, n, r, v                                      |
+  | fldWNE_SENSEID    | 1 ~ 59 Integer                                  |
+  | fldWNE_LANG       | EN, fr, jp, ko                                  |
 
 
   <b>2. tblWN_RelIndex</b>
@@ -58,13 +58,13 @@
    
   - Field Domain Set
 
-    | 필드 이름            | Domain                                          |
-    | :---------------:  | :---------------------------------------------: |
-    | fldWNIR_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, WORDNET          |
-    | fldWNIR_POS        | a, n, r, v                                      |
-    | fldWNIR_SENSEID    | 0 ~ 57 Integer                                  |
-    | fldWNIR_TRGPOS     | a, n, r, v                                      |
-    | fldWNIR_TRGSENSEID | 0 ~ 57 Integer                                  |
+  | 필드 이름            | Domain                                          |
+  | :---------------:  | :---------------------------------------------: |
+  | fldWNIR_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, WORDNET          |
+  | fldWNIR_POS        | a, n, r, v                                      |
+  | fldWNIR_SENSEID    | 0 ~ 57 Integer                                  |
+  | fldWNIR_TRGPOS     | a, n, r, v                                      |
+  | fldWNIR_TRGSENSEID | 0 ~ 57 Integer                                  |
    
   + 관계 심벌
     - 아래 테이블의 \[fldWNIR_RELATION\] 필드는 KorLex의 의미 관계를 나타내는 심벌로서<br>
@@ -107,11 +107,11 @@
 
   - Field Domain Set
 
-    | 필드 이름            | Domain                                           |
-    | :---------------:  | :----------------------------------------------: |
-    | fldWNI_ONTOLOGY    | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
-    | fldWNI_POS         | a, n, r, v                                       |
-    | fldWNI_SENSEID     | 1 ~ 59 Integer                                   |
+  | 필드 이름            | Domain                                           |
+  | :---------------:  | :----------------------------------------------: |
+  | fldWNI_ONTOLOGY    | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
+  | fldWNI_POS         | a, n, r, v                                       |
+  | fldWNI_SENSEID     | 1 ~ 59 Integer                                   |
 
   <b>4. tblWN_SSInfo</b>
   
@@ -128,14 +128,14 @@
 
   - Field Domain Set
 
-    | 필드 이름            | Domain                                           |
-    | :---------------:  | :----------------------------------------------- |
-    | fldONTOLOGY        | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
-    | fldPOS             | a, n, r, v                                       |
-    | fldLexFn           | adj, adj.{all, pert, ppl}                        |
-    | fldLexFn           | adv.all                                          |
-    | fldLexFn           | noun, noun.{act, animal, artifact, attribute, body, cognition, communication, event, feeling, food, group, hetercompound, location, motive, object, person, phenomenon, plant, possession, process, quantity, relation, shape, state, substance, time, Tops|
-    | fldLexFn           | verb.{body, change, cognition, communication, competition, consumption, contact, creation, emotion, motion, preception, possession, social, stative, weather} |
+  | 필드 이름            | Domain                                           |
+  | :---------------:  | :----------------------------------------------- |
+  | fldONTOLOGY        | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
+  | fldPOS             | a, n, r, v                                       |
+  | fldLexFn           | adj, adj.{all, pert, ppl}                        |
+  | fldLexFn           | adv.all                                          |
+  | fldLexFn           | noun, noun.{act, animal, artifact, attribute, body, cognition, communication, event, feeling, food, group, hetercompound, location, motive, object, person, phenomenon, plant, possession, process, quantity, relation, shape, state, substance, time, Tops|
+  | fldLexFn           | verb.{body, change, cognition, communication, competition, consumption, contact, creation, emotion, motion, preception, possession, social, stative, weather} |
   
   - 다음은 fldXml이 나타내는 요소와 의미 설명이다.
 
