@@ -29,7 +29,7 @@
   | 필드 이름           | Domain                                          |
   | :---------------: | :---------------------------------------------: |
   | fldWNE_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET |
-  | fldWNE_POS        | a, n, r, v                                      |
+  | fldWNE_POS        | a(adjective), n(noun), r(adverb), v(verb)                                      |
   | fldWNE_SENSEID    | 1 ~ 59 Integer                                  |
   | fldWNE_LANG       | EN, fr, jp, ko                                  |
 
@@ -63,7 +63,7 @@
   | fldWNIR_ONTOLOGY   | FRNEWN, JPNWN, KORLEX, PWN3.0, WORDNET          |
   | fldWNIR_POS        | a, n, r, v                                      |
   | fldWNIR_SENSEID    | 0 ~ 57 Integer                                  |
-  | fldWNIR_TRGPOS     | a, n, r, v                                      |
+  | fldWNIR_TRGPOS     | a(adjectivce), n(noun), r(adverb), v(verb)                                      |
   | fldWNIR_TRGSENSEID | 0 ~ 57 Integer                                  |
    
   + 관계 심벌
@@ -110,7 +110,7 @@
   | 필드 이름            | Domain                                           |
   | :---------------:  | :----------------------------------------------: |
   | fldWNI_ONTOLOGY    | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
-  | fldWNI_POS         | a, n, r, v                                       |
+  | fldWNI_POS         | a(adjective), n(noun), r(adverb), v(verb)                                       |
   | fldWNI_SENSEID     | 1 ~ 59 Integer                                   |
 
   <b>4. tblWN_SSInfo</b>
@@ -131,7 +131,7 @@
   | 필드 이름            | Domain                                           |
   | :---------------:  | :----------------------------------------------- |
   | fldONTOLOGY        | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
-  | fldPOS             | a, n, r, v                                       |
+  | fldPOS             | a(adjective), n(noun), r(adverb), v(verb)                                       |
   | fldLexFn           | adj, adj.{all, pert, ppl}                        |
   | fldLexFn           | adv.all                                          |
   | fldLexFn           | noun, noun.{act, animal, artifact, attribute, body, cognition, communication, event, feeling, food, group, hetercompound, location, motive, object, person, phenomenon, plant, possession, process, quantity, relation, shape, state, substance, time, Tops|
