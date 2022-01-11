@@ -8,7 +8,37 @@
   - 본 KorLex-api는 Windows 환경에서 사용하기를 권장.
   - [Microsoft Access Database Engine 2016 Redistributable](https://www.microsoft.com/en-us/download/details.aspx?id=54920) 링크에서 드라이버를 다운로드하여 설치.
   - python을 이용해서인지 웹 보다 속도면에서 느림.
+
+## Data Structure
+  - korlexDef.py 참조
   
+  **1. SiblingNode**
+  ~~~java
+    @dataclass
+    class SiblingNode:
+      ontology:str = None
+      pos:str = None
+      soff:str = None
+      word:str = None
+      senseId:str = None
+  ~~~
+  
+  **2. SynsetData**
+  ~~~java
+    @dataclass
+    class SynsetData:
+      word_list: list()
+      parent_list: list()
+      child_list: list()
+  ~~~
+  
+  **3. KorLexJson**
+  ~~~java
+    @dataclass
+    class KorLexJson:
+      synset: list()
+      soff:str = ""
+  ~~~  
 
 ## Method
   **1. def _local_db_connect(mdb_path:str)**
@@ -75,7 +105,7 @@
   - 검색된 단어의 동음이의어 마다의 결과를 list에 넣어 반환한다.
   - **korlexDef.KorLexJson** 구조체 참조.
     
-  **2. def make_korlex_result_json(json_rsrc_list:list)**
+  **2. make_korlex_result_json(json_rsrc_list:list)**
     
   ~~~python
     def make_korlex_result_json(json_rsrc_list:list) -> ret_json.decode():str
