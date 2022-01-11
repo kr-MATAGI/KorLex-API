@@ -14,6 +14,19 @@
   - Cypthon을 사용하여도 '먹다'를 검색했을 시 수행 속도면에서는 차이 없었음(약 27초)
   - 오히려 성능을 높이려면 나중에 필요에 따라 C++ Extension을 고려.
 
+## Enum Class
+  - Query문은 제외하고 업로드
+  
+  **1. ONTOLOGY **
+  ~~~python
+    class ONTOLOGY(Enum):
+      KORLEX = "KORLEX"
+      WORDNET = "WORDNET"
+      FRNEWN = "FRNEWN"
+      JPNWN = "JPNWN"
+      PWN3 = "PWN3.0"
+  ~~~
+
 ## Data Structure
   - korlexDef.py 참조
   
