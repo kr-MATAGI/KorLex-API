@@ -19,7 +19,8 @@ def _local_db_connect(mdb_path:str=None):
 
     return conn, cursor
 
-def search_synset_info(conn:pyodbc.Connection=None, mdb_path:str=None, soff:str=None, pos:str=None):
+def search_synset_info(conn:pyodbc.Connection=None, mdb_path:str=None, soff:str=None, pos:str=None,
+                       ontology=ONTOLOGY.KORLEX.value):
     ret_synset_data = SynsetData([], [], [])
     ret_synset_data.word_list = []
     ret_synset_data.parent_list = []
@@ -40,9 +41,9 @@ def search_synset_info(conn:pyodbc.Connection=None, mdb_path:str=None, soff:str=
 
     synset_query = ""
     if pos is None:
-        synset_query = KORLEX_QUERY.SEARCH_SSINFO.value % soff
+        synset_query = KORLEX_QUERY.SEARCH_SSINFO.value % (ontology, soff)
     else:
-        synset_query = (KORLEX_QUERY.SEARCH_POS_SSINFO.value) % (pos, soff)
+        synset_query = (KORLEX_QUERY.SEARCH_POS_SSINFO.value) % (ontology, pos, soff)
     synset_info_df = pd.read_sql(synset_query, conn)
 
     for idx, ss_info in synset_info_df.iterrows():
@@ -75,7 +76,7 @@ def search_synset_info(conn:pyodbc.Connection=None, mdb_path:str=None, soff:str=
     ret_synset_data.word_list.sort(key=lambda x: x[1])
     return ret_synset_data
 
-def search_sibling_nodes(conn:pyodbc.Connection=None, mdb_path:str=None, word:str=None):
+def search_sibling_nodes(conn:pyodbc.Connection=None, ontology:str=ONTOLOGY.KORLEX.value, mdb_path:str=None, word:str=None):
     # init
     siblingNodeList = []
 
@@ -93,7 +94,7 @@ def search_sibling_nodes(conn:pyodbc.Connection=None, mdb_path:str=None, word:st
             return siblingNodeList
 
     # query
-    query = KORLEX_QUERY.SEARCH_SIBLING_NODE.value % word
+    query = KORLEX_QUERY.SEARCH_SIBLING_NODE.value % (ontology, word)
     rows_df = pd.read_sql(query, conn)
 
     if is_inner_db_connect:
@@ -112,7 +113,8 @@ def search_sibling_nodes(conn:pyodbc.Connection=None, mdb_path:str=None, word:st
 
     return siblingNodeList
 
-def serach_relation_index_info(conn:pyodbc.Connection=None, mdb_path:str=None, soff:str=None):
+def serach_relation_index_info(conn:pyodbc.Connection=None, mdb_path:str=None, soff:str=None,
+                                     ontology:str=ONTOLOGY.KORLEX.value):
     ret_element = None
 
     if (soff is None) or (0 >= len(soff)):
@@ -129,7 +131,7 @@ def serach_relation_index_info(conn:pyodbc.Connection=None, mdb_path:str=None, s
             return ret_element
 
     # Search realtion index
-    query = KORLEX_QUERY.SEARCH_REL_IDX.value % soff
+    query = KORLEX_QUERY.SEARCH_REL_IDX.value % (ontology, soff)
     rel_idx_df = pd.read_sql(query, conn)
 
     for idx, rel_info in rel_idx_df.iterrows():
@@ -180,7 +182,7 @@ def search_soff_childern(conn:pyodbc.Connection=None, mdb_path:str=None, soff:st
 
     return ret_child_list
 
-def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
+def make_korlex_tree_resource(word:str=None, ontology:str=ONTOLOGY.KORLEX.value, mdb_path:str=None):
     ret_json_rsrc_list = []
 
     if word is None:
@@ -194,12 +196,12 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
         return ret_json_rsrc_list
 
     # search target info (search synset)
-    search_target_info = search_sibling_nodes(conn=conn, word=word, mdb_path=mdb_path)
+    search_target_info = search_sibling_nodes(conn=conn, ontology=ontology, word=word, mdb_path=mdb_path)
     print(search_target_info)
 
     # Make Tree (format. json)
     for st_info in search_target_info:
-        search_target_synset = search_synset_info(conn=conn, soff=st_info.soff, pos=st_info.pos)
+        search_target_synset = search_synset_info(conn=conn, soff=st_info.soff, pos=st_info.pos, ontology=ontology)
 
         parent_json_data_list = []
         origin_json = KorLexJson(synset=[])
@@ -216,7 +218,7 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
             target_pos = st_info.pos
             while None != target_soff:
                 # Search Synset
-                sysnset_data = search_synset_info(conn=conn, soff=target_soff, pos=target_pos)
+                sysnset_data = search_synset_info(conn=conn, soff=target_soff, pos=target_pos, ontology=ontology)
                 korlex_json = KorLexJson(synset=[])
                 korlex_json.synset = sysnset_data.word_list
                 korlex_json.soff = target_soff
@@ -224,7 +226,7 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
 
                 # Search relation index
                 prev_target_soff = target_soff
-                target_soff = serach_relation_index_info(conn=conn, soff=target_soff)
+                target_soff = serach_relation_index_info(conn=conn, soff=target_soff, ontology=ontology)
                 if prev_target_soff == target_soff:
                     break # Stop Loop
             parent_json_data_list.append(parent_json_data)
@@ -237,9 +239,9 @@ def make_korlex_tree_resource(word:str=None, mdb_path:str=None):
     return ret_json_rsrc_list
 
 
-def make_korlex_result_json(json_rsrc_list:list):
+def make_korlex_result_json(json_rsrc_list:list, ontology:str=ONTOLOGY.KORLEX.value):
     json_dict = {
-        "ontology": "korlex",
+        "ontology": ontology,
         "search_word": "",
         "search_senseid": "",
         "results": []
@@ -274,7 +276,9 @@ def make_korlex_result_json(json_rsrc_list:list):
 if "__main__" == __name__:
     mdb_path = "../db/20170726_KorLexDB.mdb"
 
-    json_rsc_list = make_korlex_tree_resource(word="먹다", mdb_path=mdb_path)
+    json_rsc_list = make_korlex_tree_resource(word="eat",
+                                              ontology=ONTOLOGY.WORDNET.value,
+                                              mdb_path=mdb_path)
 
     for json_rsrc in json_rsc_list:
         test_res = make_korlex_result_json(json_rsrc)
