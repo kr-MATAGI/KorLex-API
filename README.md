@@ -105,6 +105,14 @@
    | fldWNI_WORD      | 긴 텍스트(navrchar)  | 어형                     | 100   | No       | Primary Key  | 문자열    |
    | fldWNI_SENSEID   | 숫자(tinyint)       | 어의 번호                 |       | No       | Primary Key  | 숫자     |
 
+  - Field Domain Set
+
+    | 필드 이름            | Domain                                           |
+    | :---------------:  | :----------------------------------------------: |
+    | fldWNI_ONTOLOGY    | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
+    | fldWNI_POS         | a, n, r, v                                       |
+    | fldWNI_SENSEID     | 1 ~ 59 Integer                                   |
+
   <b>4. tblWN_SSInfo</b>
   
   - \[tblWN_SSInfo\] 테이블은 신셋(synonym set: 동의어 집합)에 대한 정보를 나타낸댜. <br> 신셋은 각 품사별로 8자리의 고유번호를 가진다.
@@ -118,6 +126,16 @@
    | fldLexFn    | 짧은 텍스트(char) | Lexical life <br> 도메인 | 20    | No       |               | 문자열    |
    | fldXml      | 긴 텍스트(xml)   | 신셋 정보                 |       |          |               | xml 문서 |
 
+  - Field Domain Set
+
+    | 필드 이름            | Domain                                           |
+    | :---------------:  | :----------------------------------------------- |
+    | fldONTOLOGY        | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
+    | fldPOS             | a, n, r, v                                       |
+    | fldLexFn           | adj, adj.{all, pert, ppl}                        |
+    |                    | adv.all                                          |
+    |                    | noun, noun.{act, animal, artifact, attribute, body, cognition, communication, event, feeling, food, group, hetercompound, location, motive, object, person, phenomenon, plant, possession, process, quantity, relation, shape, state, substance, time, Tops|
+    |                    | verb.{body, change, cognition, communication, competition, consumption, contact, creation, emotion, motion, preception, possession, social, stative, weather |
   
   - 다음은 fldXml이 나타내는 요소와 의미 설명이다.
 
