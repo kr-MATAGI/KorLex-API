@@ -17,7 +17,7 @@
 ## Enum Class
   - Query문은 제외하고 업로드
   
-  **1. ONTOLOGY **
+  **1. ONTOLOGY**
   ~~~python
     class ONTOLOGY(Enum):
       KORLEX = "KORLEX"
