@@ -5,3 +5,4 @@ __pycache__
 
 # mdb
 *.mdb
+*.ldb
