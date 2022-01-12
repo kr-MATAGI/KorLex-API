@@ -3,6 +3,8 @@
 .idea
 __pycache__
 
-# mdb
+
+# data
 *.mdb
 *.ldb
+/dic
