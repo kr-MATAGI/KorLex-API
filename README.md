@@ -146,3 +146,21 @@
    | POINTER     | 타의미와 관계를 나타낸다. <br> 하나 이상이 포함될 수 있으며, 특정한 심벌과 대상 의미의 번호, 품사 정보를 포함한다.          |
    | GLOSS       | 어휘의 의미를 설명할 수 있는 일반적인 내용을 담는다.                                                           |
    | domainblock | 도메인 정보를 담는다.                                                                                   |
+
+  e.g. 동사 01064957 {지다1, 패배하다1, 패하다1}의 신셋 정보
+
+ | 신셋 정보                                                                  | 설명                                          |
+ | :----------------------------------------------------------------------- | :------------------------------------------- |
+ | \<SYN pos="v" lexfn="verb.competition" soff="01064957" descendent="0">    | PWN 품사, 의미분류, 신셋번호, 하위노드 유무           |
+ |  \<POINTER symbol="Topic-Domain-of-Synset" tsoff="00407449" tpos="n"/>    | PWN의 신셋의 의미관계: 영역(전문분야)                |
+ |  \<POINTER symbol="parent" toff="01064559" tpos="v"/>                     | PWN의 신셋의 의미관계: 상위노드                     |
+ |  \<GLOSS>lose (a game): "The Giants dropped 11 of their first 13"</GLOSS> | PWN의 정의문                                    |
+ |  \<DOMAIN>verb.competition</DOMAIN>                                       | KorLex 의미분류                                 |
+ |  \<WORD senseid="1" seq="0">지다</WORD>                                    | KorLex 신셋을 구성하는 어의 1: '지다1'              |
+ |  \<WORD senseid="1" seq="1">패배하다</WORD>                                 | KorLex 신셋을 구성하는 어의 2: '패배하다1'           |
+ |  \<WORD senseid="1" seq="2">패하다</WORD>                                  | KorLex 신셋을 구성하는 어의 3: '패하다1'             |
+ |  \<POINTER symbol="parent" tsoff="01064559" tpos="v"/>                    | KorLex 신셋의 의미관계: 상위노드                    |
+ |  \<POINTER symbol="child" tsoff="02691569" tpos="v"/>                     | KorLex 신셋의 의미관계: 하위노드                    |
+ |  \<POINTER symbol="child" tsoff="02692052" tpos="v"/>                     | KorLex 신셋의 의미관계: 하위노드                    |
+ | \</SYN>                                                                   |                                               |
+  
