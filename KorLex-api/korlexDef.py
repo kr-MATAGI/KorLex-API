@@ -38,6 +38,19 @@ class KORLEX_QUERY(Enum):
         AND fldWNIR_TRGELEMENT LIKE '%s';
     """
 
+    ALL_SE_IDX_BY_ONTOLOGY = """
+        SELECT fldWNI_SOFF, fldWNI_WORD FROM  
+        tblWN_SEIndex 
+        WHERE fldWNI_ONTOLOGY = '%s';
+    """
+
+    ALL_SS_INFO_BY_ONTOLOGY = """
+        SELECT fldXml, fldPos, fldSoff, fldLexFn FROM 
+        tblWN_SSINFO 
+        WHERE fldOntology = '%s';
+    """
+
+
 @dataclass
 class SiblingNode:
     ontology: str = None

@@ -8,3 +8,4 @@ __pycache__
 *.mdb
 *.ldb
 /dic
+*.json

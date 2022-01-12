@@ -272,10 +272,67 @@ def make_korlex_result_json(json_rsrc_list:list, ontology:str=ONTOLOGY.KORLEX.va
 
     return ret_json.decode()
 
+def _make_word_to_synset_dict(conn:pyodbc.Connection=None, ontology:str=None):
+    if (conn is None) or (ontology is None):
+        if conn is None: print("[_make_word_to_synset_dict] conn is NULL")
+        else: print("[_make_word_to_synset_dict] ontology is NULL")
+        return
+
+    # query
+    query = KORLEX_QUERY.ALL_SE_IDX_BY_ONTOLOGY.value % ontology
+    synset_word_info = pd.read_sql_query(query, conn)
+
+    word2synset_dict, synset2word_dict = {}, {}
+    for idx, row in synset_word_info.iterrows():
+        word = row["fldWNI_WORD"]
+        soff = row["fldWNI_SOFF"]
+
+        word2synset_dict[word] = soff
+        synset2word_dict[soff] = word
+
+    return word2synset_dict, synset2word_dict
+
+def _make_all_ss_info_dict(conn:pyodbc.Connection=None, ontology:str=None):
+    if (conn is None) or (ontology is None):
+        if conn is None: print("[_make_all_ss_info_dict] conn is NULL")
+        else: print("[_make_all_ss_info_dict] ontology is NULL")
+        return
+
+    query = KORLEX_QUERY.ALL_SS_INFO_BY_ONTOLOGY.value % ontology
+    all_ss_info = pd.read_sql_query(query, conn)
+
+    print(all_ss_info)
+
+def make_synset_dictionary(mdb_path:str=None, ontology=ONTOLOGY.KORLEX.value, dest_path:str=None):
+    print("Start Make Synset Dictionary !")
+
+    if (mdb_path is None) or (dest_path is None):
+        print(f"[make_synset_dictionary] ERR - path is NULL, mdb:{mdb_path}, dest:{dest_path}")
+        return
+
+    # DB Connect
+    conn, cursor = _local_db_connect(mdb_path=mdb_path)
+
+    # make word2synset dictionary
+    word2ss_dict, ss2word_dict = _make_word_to_synset_dict(conn=conn, ontology=ontology)
+
+    # save json file
+    word2ss_file = ontology.lower() + "_word2ss.json"
+    with open(dest_path+"/"+word2ss_file, "w") as outfile:
+        json.dump(word2ss_dict, outfile)
+
+    ss2word_file = ontology.lower() + "_ss2word.json"
+    with open(dest_path+"/"+ss2word_file, "w") as outfile:
+        json.dump(ss2word_dict, outfile)
+
+    # make all info dictionary
+    # all_ssinfo_dict = _make_all_ss_info_dict(conn=conn, ontology=ontology)
+
+
 ### TEST ###
 if "__main__" == __name__:
     mdb_path = "../db/20170726_KorLexDB.mdb"
-
+    '''
     json_rsc_list = make_korlex_tree_resource(word="eat",
                                               ontology=ONTOLOGY.WORDNET.value,
                                               mdb_path=mdb_path)
@@ -284,3 +341,6 @@ if "__main__" == __name__:
         test_res = make_korlex_result_json(json_rsrc)
         print(test_res)
         print()
+    '''
+
+    make_synset_dictionary(mdb_path=mdb_path, ontology=ONTOLOGY.KORLEX.value, dest_path="./dic")
