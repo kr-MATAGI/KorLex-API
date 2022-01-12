@@ -154,11 +154,11 @@
  | \<SYN pos="v" lexfn="verb.competition" soff="01064957" descendent="0">    | PWN 품사, 의미분류, 신셋번호, 하위노드 유무           |
  |  \<POINTER symbol="Topic-Domain-of-Synset" tsoff="00407449" tpos="n"/>    | PWN의 신셋의 의미관계: 영역(전문분야)                |
  |  \<POINTER symbol="parent" toff="01064559" tpos="v"/>                     | PWN의 신셋의 의미관계: 상위노드                     |
- |  \<GLOSS>lose (a game): "The Giants dropped 11 of their first 13"</GLOSS> | PWN의 정의문                                    |
- |  \<DOMAIN>verb.competition</DOMAIN>                                       | KorLex 의미분류                                 |
- |  \<WORD senseid="1" seq="0">지다</WORD>                                    | KorLex 신셋을 구성하는 어의 1: '지다1'              |
- |  \<WORD senseid="1" seq="1">패배하다</WORD>                                 | KorLex 신셋을 구성하는 어의 2: '패배하다1'           |
- |  \<WORD senseid="1" seq="2">패하다</WORD>                                  | KorLex 신셋을 구성하는 어의 3: '패하다1'             |
+ |  \<GLOSS>lose (a game): "The Giants dropped 11 of their first 13"\</GLOSS> | PWN의 정의문                                    |
+ |  \<DOMAIN>verb.competition\</DOMAIN>                                       | KorLex 의미분류                                 |
+ |  \<WORD senseid="1" seq="0">지다\</WORD>                                    | KorLex 신셋을 구성하는 어의 1: '지다1'              |
+ |  \<WORD senseid="1" seq="1">패배하다\</WORD>                                 | KorLex 신셋을 구성하는 어의 2: '패배하다1'           |
+ |  \<WORD senseid="1" seq="2">패하다\</WORD>                                  | KorLex 신셋을 구성하는 어의 3: '패하다1'             |
  |  \<POINTER symbol="parent" tsoff="01064559" tpos="v"/>                    | KorLex 신셋의 의미관계: 상위노드                    |
  |  \<POINTER symbol="child" tsoff="02691569" tpos="v"/>                     | KorLex 신셋의 의미관계: 하위노드                    |
  |  \<POINTER symbol="child" tsoff="02692052" tpos="v"/>                     | KorLex 신셋의 의미관계: 하위노드                    |
