@@ -2,6 +2,7 @@ import pyodbc
 import pandas as pd
 from xml.etree import ElementTree as elemTree
 import json
+import copy
 
 ## Not Built-in
 from korlexDef import *
@@ -292,7 +293,60 @@ def _make_word_to_synset_dict(conn:pyodbc.Connection=None, ontology:str=None):
 
     return word2synset_dict, synset2word_dict
 
-def _make_all_ss_info_dict(conn:pyodbc.Connection=None, ontology:str=None):
+def _parse_field_xml_from_ssinfo(src_xml:str="", ss2word_dict:dict=None):
+    ret_dict = {
+        "syn": {
+            "pos": "",
+            "lexfn": "",
+            "soff": -1,
+            "descendent": -1
+        },
+        "pwn_pointer": [],
+        "gloss": "",
+        "domain": "",
+        "word": [],
+        "krx_pointer": []
+    }
+
+    # SYN
+    syn_node = elemTree.fromstring(src_xml)
+    ret_dict["syn"]["pos"] = syn_node.get("pos", "")
+    ret_dict["syn"]["lexfn"] = syn_node.get("lexfn", "")
+    ret_dict["syn"]["soff"] = int(syn_node.get("soff", -1))
+    ret_dict["syn"]["descendent"] = int(syn_node.get("descendent", -1))
+
+    # GLOSS
+    gloss_node = syn_node.find("GLOSS")
+    ret_dict["gloss"] = gloss_node.text
+
+    # DOMAIN
+    domain_block_node = syn_node.find("domainblock")
+    domain_node = domain_block_node.find("domain")
+    ret_dict["domain"] = domain_node.text
+
+    # WORD
+    word_dict = {
+        "senseid": -1,
+        "seq": -1,
+        "text": ""
+    }
+
+    word_node_list = syn_node.findall("WORD")
+    for word_node in word_node_list:
+        word_dict["senseid"] = word_node.get("senseid", -1)
+        word_dict["seq"] = word_node.get("seq", -1)
+        word_dict["text"] = word_node.text
+        ret_dict["word"].append(copy.deepcopy(word_dict))
+
+    # POINTER
+    print(ss2word_dict)
+
+
+    print(ret_dict)
+
+    return ret_dict
+
+def _make_all_ss_info_dict(conn:pyodbc.Connection=None, ontology:str=None, ss2word_dict:dict=None):
     if (conn is None) or (ontology is None):
         if conn is None: print("[_make_all_ss_info_dict] conn is NULL")
         else: print("[_make_all_ss_info_dict] ontology is NULL")
@@ -301,7 +355,27 @@ def _make_all_ss_info_dict(conn:pyodbc.Connection=None, ontology:str=None):
     query = KORLEX_QUERY.ALL_SS_INFO_BY_ONTOLOGY.value % ontology
     all_ss_info = pd.read_sql_query(query, conn)
 
-    print(all_ss_info)
+    ret_ss_info_dict = {}
+    for idx, row in all_ss_info.iterrows():
+        fld_xml = row["fldXml"]
+        fld_pos = row["fldPos"]
+        fld_soff = row["fldSoff"] # key
+        fld_LexFn = row["fldLexFn"]
+
+        # parse fldXml
+        fld_xml_dict = _parse_field_xml_from_ssinfo(src_xml=fld_xml, ss2word_dict=ss2word_dict)
+
+        ret_ss_info_dict[fld_soff] = {
+            "pos": fld_pos,
+            "lexFn": fld_LexFn,
+            "xml": {
+
+            }
+        }
+
+        break
+
+    return ret_ss_info_dict
 
 def make_synset_dictionary(mdb_path:str=None, ontology=ONTOLOGY.KORLEX.value, dest_path:str=None):
     print("Start Make Synset Dictionary !")
@@ -326,7 +400,12 @@ def make_synset_dictionary(mdb_path:str=None, ontology=ONTOLOGY.KORLEX.value, de
         json.dump(ss2word_dict, outfile)
 
     # make all info dictionary
-    # all_ssinfo_dict = _make_all_ss_info_dict(conn=conn, ontology=ontology)
+    all_ssinfo_dict = _make_all_ss_info_dict(conn=conn, ontology=ontology, ss2word_dict=ss2word_dict)
+
+    # save json file
+    all_ssinfo_file = ontology.lower() + "_ssinfo.json"
+    with open(dest_path+"/"+all_ssinfo_file, "w") as outfile:
+        json.dump(all_ssinfo_dict, outfile)
 
 
 ### TEST ###
