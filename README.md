@@ -130,8 +130,8 @@
 
   | 필드 이름            | Domain                                           |
   | :---------------:  | :----------------------------------------------- |
-  | fldONTOLOGY        | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
-  | fldPOS             | a(adjective), n(noun), r(adverb), v(verb)                                       |
+  | fldOntology        | FRNEWN, JPNWN, KORLEX, PWN3.0, tmponto, WORDNET  |
+  | fldPos             | a(adjective), n(noun), r(adverb), v(verb)                                       |
   | fldLexFn           | adj, adj.{all, pert, ppl}                        |
   | fldLexFn           | adv.all                                          |
   | fldLexFn           | noun, noun.{act, animal, artifact, attribute, body, cognition, communication, event, feeling, food, group, hetercompound, location, motive, object, person, phenomenon, plant, possession, process, quantity, relation, shape, state, substance, time, Tops|
