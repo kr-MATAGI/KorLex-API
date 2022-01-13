@@ -132,7 +132,7 @@ def serach_relation_index_info(conn:pyodbc.Connection=None, mdb_path:str=None, s
             return ret_element
 
     # Search realtion index
-    query = KORLEX_QUERY.SEARCH_REL_IDX.value % (ontology, soff)
+    query = KORLEX_QUERY.SEARCH_REL_IDX_BY_TRGELEM.value % (ontology, soff)
     rel_idx_df = pd.read_sql(query, conn)
 
     for idx, rel_info in rel_idx_df.iterrows():
@@ -286,14 +286,14 @@ def _make_word_to_synset_dict(conn:pyodbc.Connection=None, ontology:str=None):
     word2synset_dict, synset2word_dict = {}, {}
     for idx, row in synset_word_info.iterrows():
         word = row["fldWNI_WORD"]
-        soff = row["fldWNI_SOFF"]
+        soff = int(row["fldWNI_SOFF"])
 
         word2synset_dict[word] = soff
         synset2word_dict[soff] = word
 
     return word2synset_dict, synset2word_dict
 
-def _parse_field_xml_from_ssinfo(src_xml:str="", ss2word_dict:dict=None):
+def _parse_field_xml_from_ssinfo(src_xml:str=""):
     ret_dict = {
         "syn": {
             "pos": "",
@@ -301,11 +301,10 @@ def _parse_field_xml_from_ssinfo(src_xml:str="", ss2word_dict:dict=None):
             "soff": -1,
             "descendent": -1
         },
-        "pwn_pointer": [],
         "gloss": "",
         "domain": "",
         "word": [],
-        "krx_pointer": []
+        "pointer": []
     }
 
     # SYN
@@ -339,14 +338,55 @@ def _parse_field_xml_from_ssinfo(src_xml:str="", ss2word_dict:dict=None):
         ret_dict["word"].append(copy.deepcopy(word_dict))
 
     # POINTER
-    print(ss2word_dict)
+    pointer_dict = {
+        "symbol": "",
+        "tsoff": -1,
+        "tpos": "",
+    }
 
-
-    print(ret_dict)
+    pointer_node_list = syn_node.findall("POINTER")
+    for pt_node in pointer_node_list:
+        pointer_dict["symbol"] = pt_node.get("symbol", "")
+        pointer_dict["tsoff"] = pt_node.get("tsoff", -1)
+        pointer_dict["tpos"] = pt_node.get("tpos", "")
+        ret_dict["pointer"].append(copy.deepcopy(pointer_dict))
 
     return ret_dict
 
-def _make_all_ss_info_dict(conn:pyodbc.Connection=None, ontology:str=None, ss2word_dict:dict=None):
+def _make_realtion_info_from_table(conn:pyodbc.Connection=None, ontology:str=None, soff:str=None):
+    ret_rel_info_dict_list = []
+
+    query = KORLEX_QUERY.SEARCH_REL_IDX_BY_SOFF.value % (ontology, soff)
+    rel_info_list = pd.read_sql_query(query, conn)
+
+    rel_info_dict = {
+        "ontology": "",
+        "pos": "",
+        "elem": -1,
+        "senseid": -1,
+        "relation": "",
+        "trg": {
+            "pos": "",
+            "elem": -1,
+            "senseid": -1,
+        }
+    }
+
+    for idx, rel_info in rel_info_list.iterrows():
+        rel_info_dict["ontology"] = rel_info.get("fldWNIR_ONTOLOGY", "")
+        rel_info_dict["pos"] = rel_info.get("fldWNIR_POS", "")
+        rel_info_dict["elem"] = int(rel_info.get("fldWNIR_ELEMENT", -1))
+        rel_info_dict["senseid"] = int(rel_info.get("fldWNIR_SENSEID", -1))
+        rel_info_dict["relation"] = rel_info.get("fldWNIR_RELATION", "")
+        rel_info_dict["trg"]["pos"] = rel_info.get("fldWNIR_TRGPOS", "")
+        rel_info_dict["trg"]["elem"] = int(rel_info.get("fldWNIR_TRGELEMENT", -1))
+        rel_info_dict["trg"]["senseid"] = int(rel_info.get("fldWNIR_TRGSENSEID", -1))
+
+        ret_rel_info_dict_list.append(copy.deepcopy(rel_info_dict))
+
+    return ret_rel_info_dict_list
+
+def _make_all_info_dict(conn:pyodbc.Connection=None, ontology:str=None):
     if (conn is None) or (ontology is None):
         if conn is None: print("[_make_all_ss_info_dict] conn is NULL")
         else: print("[_make_all_ss_info_dict] ontology is NULL")
@@ -357,23 +397,27 @@ def _make_all_ss_info_dict(conn:pyodbc.Connection=None, ontology:str=None, ss2wo
 
     ret_ss_info_dict = {}
     for idx, row in all_ss_info.iterrows():
+        if 0 == (idx % 100):
+            print("Processing... ", idx)
+
         fld_xml = row["fldXml"]
         fld_pos = row["fldPos"]
-        fld_soff = row["fldSoff"] # key
+        fld_soff = int(row["fldSoff"]) # key
         fld_LexFn = row["fldLexFn"]
 
-        # parse fldXml
-        fld_xml_dict = _parse_field_xml_from_ssinfo(src_xml=fld_xml, ss2word_dict=ss2word_dict)
+        # Parse fldXml
+        fld_xml_dict = _parse_field_xml_from_ssinfo(src_xml=fld_xml)
 
         ret_ss_info_dict[fld_soff] = {
             "pos": fld_pos,
-            "lexFn": fld_LexFn,
-            "xml": {
-
-            }
+            "lexFn": fld_LexFn.strip(),
+            "synset_info": fld_xml_dict,
+            "relation_info": []
         }
 
-        break
+        # Get relation info
+        rel_info_dict_list = _make_realtion_info_from_table(conn=conn, ontology=ontology, soff=row["fldSoff"])
+        ret_ss_info_dict[fld_soff]["relation_info"] = rel_info_dict_list
 
     return ret_ss_info_dict
 
@@ -387,7 +431,7 @@ def make_synset_dictionary(mdb_path:str=None, ontology=ONTOLOGY.KORLEX.value, de
     # DB Connect
     conn, cursor = _local_db_connect(mdb_path=mdb_path)
 
-    # make word2synset dictionary
+    # make word2synset, synset2word dictionary
     word2ss_dict, ss2word_dict = _make_word_to_synset_dict(conn=conn, ontology=ontology)
 
     # save json file
@@ -400,12 +444,12 @@ def make_synset_dictionary(mdb_path:str=None, ontology=ONTOLOGY.KORLEX.value, de
         json.dump(ss2word_dict, outfile)
 
     # make all info dictionary
-    all_ssinfo_dict = _make_all_ss_info_dict(conn=conn, ontology=ontology, ss2word_dict=ss2word_dict)
+    all_info_dict = _make_all_info_dict(conn=conn, ontology=ontology)
 
     # save json file
-    all_ssinfo_file = ontology.lower() + "_ssinfo.json"
-    with open(dest_path+"/"+all_ssinfo_file, "w") as outfile:
-        json.dump(all_ssinfo_dict, outfile)
+    all_info_file = ontology.lower() + "_all_info.json"
+    with open(dest_path+"/"+all_info_file, "w") as outfile:
+        json.dump(all_info_dict, outfile)
 
 
 ### TEST ###

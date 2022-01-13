@@ -31,11 +31,18 @@ class KORLEX_QUERY(Enum):
             AND fldSoff like '%s';
         """
 
-    SEARCH_REL_IDX = """
+    SEARCH_REL_IDX_BY_TRGELEM = """
         SELECT * FROM 
         tblWN_RelIndex 
         WHERE fldWNIR_ONTOLOGY = '%s'  
         AND fldWNIR_TRGELEMENT LIKE '%s';
+    """
+
+    SEARCH_REL_IDX_BY_SOFF = """
+        SELECT * FROM
+        tblWN_RelIndex
+        WHERE fldWNIR_ONTOLOGY = '%s'
+        AND fldWNIR_ELEMENT LIKE '%s';
     """
 
     ALL_SE_IDX_BY_ONTOLOGY = """
