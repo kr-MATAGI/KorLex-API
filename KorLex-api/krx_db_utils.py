@@ -176,7 +176,7 @@ class KorLexDB_Utils:
         query = KORLEX_QUERY.ALL_SS_INFO_BY_ONTOLOGY.value % ontology
         all_ss_info = pd.read_sql_query(query, conn)
 
-        ret_ss_info_dict = {}
+        ret_all_info_dict = {}
         for idx, row in all_ss_info.iterrows():
             if 0 == (idx % 100):
                 print("Processing... ", idx)
@@ -189,7 +189,7 @@ class KorLexDB_Utils:
             # Parse fldXml
             fld_xml_dict = self._parse_field_xml_from_ssinfo(src_xml=fld_xml)
 
-            ret_ss_info_dict[fld_soff] = {
+            ret_all_info_dict[fld_soff] = {
                 "pos": fld_pos,
                 "lexFn": fld_LexFn.strip(),
                 "synset_info": fld_xml_dict,
@@ -200,9 +200,9 @@ class KorLexDB_Utils:
             rel_info_dict_list = self._make_realtion_info_from_table(conn=conn,
                                                                      ontology=ontology,
                                                                      soff=row["fldSoff"])
-            ret_ss_info_dict[fld_soff]["relation_info"] = rel_info_dict_list
+            ret_all_info_dict[fld_soff]["relation_info"] = rel_info_dict_list
 
-        return ret_ss_info_dict
+        return ret_all_info_dict
 
     ### PULBIC ###
     # Make KorLex Json Dictionary
