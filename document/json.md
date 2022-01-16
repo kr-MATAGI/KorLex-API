@@ -14,6 +14,8 @@
   **위 두 결과에 대한 JSON은 따로 생성됨을 명시한다.**
   
 ## Json Format
+ - 본 문서의 JSON은 최종 검색된 결과에 대한 Format 이다.
+
 ### Root Format
   ~~~python
     {
