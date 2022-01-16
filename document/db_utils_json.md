@@ -33,7 +33,7 @@
     
   ~~~python
   {
-    "sny": {
+    "syn": {
       "pos": str,
       "lexfn": "",
       "soff": int,
