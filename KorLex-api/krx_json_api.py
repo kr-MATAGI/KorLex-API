@@ -90,8 +90,35 @@ class KorLexAPI:
             self.krx_json = json.load(json_file)
             print("[KorLexAPI][load_json_data] Loaded ontology json !")
 
-    def TEST(self):
-        print(self.krx_json)
+    def search_word(self, word:str):
+        ret_json = None
+        # Convert synset (soff)
+        if word not in self.w2ss_json.keys():
+            print("[KorLexAPI][search_word] ERR - Not in w2ss:", word)
+            return ret_json
+
+        target_soff = self.w2ss_json[word]
+        ret_json = self.search_synset(target_synset=target_soff)
+
+        return ret_json
+
+    def search_synset(self, target_synset):
+        '''
+        :param synset: is available str or int type
+        :return:
+        '''
+
+        # init
+        ret_json = None
+
+        # Check synset param's type
+        if type(target_synset) is str:
+            try:
+                target_synset = int(target_synset)
+            except Exception as err:
+                print("[KorLexAPI][search_synset] ERR - type convert:\n", err)
+
+        return ret_json
 
 ### TEST ###
 if "__main__" == __name__:
@@ -100,4 +127,3 @@ if "__main__" == __name__:
                              w2ss_path="",
                              ss2w_path="")
     krx_json_api.load_json_data()
-    krx_json_api.TEST()
