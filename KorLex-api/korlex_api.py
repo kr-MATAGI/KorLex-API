@@ -1,11 +1,11 @@
-import pyodbc
+import pyodbc # MS Access (*.mdb)
 import pandas as pd
 from xml.etree import ElementTree as elemTree
 import json
 import copy
 
 ## Not Built-in
-from korlexDef import *
+from korLexDef import *
 
 
 ### METHOD ###
