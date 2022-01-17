@@ -68,13 +68,14 @@ class KORLEX_QUERY(Enum):
 class Target:
     ontology: str = ""
     word: str = ""
+    sense_id: str = ""
     pos: str = ""
+    soff: int = -1
 
 @dataclass
 class Synset:
-    sense_id: str = ""
-    seq: str = ""
     text: str = ""
+    sense_id: str = ""
 
 @dataclass
 class SS_Node:
