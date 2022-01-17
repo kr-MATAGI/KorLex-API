@@ -46,7 +46,7 @@ class KORLEX_QUERY(Enum):
     """
 
     ALL_SE_IDX_BY_ONTOLOGY = """
-        SELECT fldWNI_SOFF, fldWNI_WORD FROM  
+        SELECT fldWNI_SOFF, fldWNI_WORD, fldWNI_SENSEID FROM  
         tblWN_SEIndex 
         WHERE fldWNI_ONTOLOGY = '%s';
     """
@@ -59,20 +59,24 @@ class KORLEX_QUERY(Enum):
 
 
 @dataclass
-class SiblingNode:
-    ontology: str = None
-    pos: str = None
-    soff: str = None
-    word: str = None
-    senseId: str = None
+class Target:
+    ontology: str = ""
+    word: str = ""
+    pos: str = ""
 
 @dataclass
-class SynsetData:
-    word_list: list()
-    parent_list: list()
-    child_list: list()
+class Synset:
+    sense_id: str = ""
+    seq: str = ""
+    text: str = ""
 
 @dataclass
-class KorLexJson:
-    synset: list()
-    soff: str = ""
+class SS_Node:
+    synset_list: list() # Synset
+    soff: int = -1
+    pos: str = ""
+
+@dataclass
+class KorLexResult:
+    target: Target()
+    results: list() # SS_Node

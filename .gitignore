@@ -4,8 +4,9 @@
 __pycache__
 
 
-# data
+# data1
 *.mdb
 *.ldb
 /dic
 *.json
+*.pkl

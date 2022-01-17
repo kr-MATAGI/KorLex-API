@@ -3,6 +3,7 @@ import pandas as pd
 from xml.etree import ElementTree as elemTree
 import json
 import copy
+import pickle
 
 ## KorLex API Json Definition
 from korLexDef import *
@@ -44,15 +45,20 @@ class KorLexDB_Utils:
         query = KORLEX_QUERY.ALL_SE_IDX_BY_ONTOLOGY.value % ontology
         synset_word_info = pd.read_sql_query(query, conn)
 
-        word2synset_dict, synset2word_dict = {}, {}
+        word_list = []
+        soff_list = []
+        senseid_list = []
         for idx, row in synset_word_info.iterrows():
             word = row["fldWNI_WORD"]
             soff = int(row["fldWNI_SOFF"])
+            senseid = row["fldWNI_SENSEID"]
 
-            word2synset_dict[word] = soff
-            synset2word_dict[soff] = word
+            word_list.append(word)
+            soff_list.append(soff)
+            senseid_list.append(senseid)
 
-        return word2synset_dict, synset2word_dict
+        synset_df = pd.DataFrame((word_list, soff_list, senseid_list), index=["word", "soff", "senseid"]).transpose()
+        return synset_df
 
     def _parse_field_xml_from_ssinfo(self, src_xml: str = ""):
         '''
@@ -206,8 +212,9 @@ class KorLexDB_Utils:
 
     ### PULBIC ###
     # Make KorLex Json Dictionary
-    def make_synset_dictionary(self, mdb_path: str = None,
-                               ontology=ONTOLOGY.KORLEX.value,
+    def make_synset_dictionary(self,
+                               mdb_path: str = None,
+                               ontology: str = ONTOLOGY.KORLEX.value,
                                dest_path: str = None):
         '''
         :param mdb_path: mdb_path: korlex ms access local file path (*.mdb)
@@ -244,13 +251,29 @@ class KorLexDB_Utils:
         with open(dest_path + "/" + all_info_file, "w") as outfile:
             json.dump(all_info_dict, outfile)
 
+    def make_ontology_dictionary(self, mdb_path:str,
+                                 dest_path:str,
+                                 ontology:str=ONTOLOGY.KORLEX.value):
+        # DB Connect
+        conn, cursor = self._local_db_connect(mdb_path=mdb_path)
 
+        # make word2synset, synset2word dictionary
+        synset_df = self._make_word_to_synset_dict(conn=conn, ontology=ontology)
+
+        # save json file
+        synset_file = ontology.lower() + "_seIdx.pkl"
+        with open(dest_path + "/" + synset_file, mode="wb") as outfile:
+            pickle.dump(synset_df, outfile)
 
 ### TEST ###
 if "__main__" == __name__:
     mdb_path = "../db/20170726_KorLexDB.mdb"
 
-    krx_db_util = KorLexDB_Utils
-    krx_db_util.make_synset_dictionary(mdb_path=mdb_path,
-                                       ontology=ONTOLOGY.KORLEX.value,
-                                       dest_path="./dic")
+    krx_db_util = KorLexDB_Utils()
+    # krx_db_util.make_synset_dictionary(mdb_path=mdb_path,
+    #                                    ontology=ONTOLOGY.KORLEX.value,
+    #                                    dest_path="./dic")
+
+    krx_db_util.make_ontology_dictionary(mdb_path=mdb_path,
+                                         dest_path="./dic",
+                                         ontology=ONTOLOGY.KORLEX.value)
