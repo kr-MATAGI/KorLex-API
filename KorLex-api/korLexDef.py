@@ -45,8 +45,14 @@ class KORLEX_QUERY(Enum):
         AND fldWNIR_ELEMENT LIKE '%s';
     """
 
+    ALL_REL_IDX_BY_ONTOLOGY = """
+        SELECT * FROM
+        tblWN_RelIndex
+        WHERE fldWNIR_ONTOLOGY = '%s';
+    """
+
     ALL_SE_IDX_BY_ONTOLOGY = """
-        SELECT fldWNI_SOFF, fldWNI_WORD, fldWNI_SENSEID FROM  
+        SELECT * FROM  
         tblWN_SEIndex 
         WHERE fldWNI_ONTOLOGY = '%s';
     """

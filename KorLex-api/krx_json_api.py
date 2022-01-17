@@ -11,11 +11,12 @@ from korLexDef import *
 class KorLexAPI:
     ### PRIVATE ###
     ### METHOD ###
-    def __init__(self, json_path:str, seIdx_path:str):
+    def __init__(self, json_path:str, seIdx_path:str, reIdx_path:str):
         print("[KorLexAPI][INIT] Plz Wait...")
 
         self.is_set_json_path = False
         self.is_set_seIdx_path = False
+        self.is_set_reIdx_path = False
 
         # check seIdx_path
         if 0 >= len(seIdx_path):
@@ -27,6 +28,17 @@ class KorLexAPI:
 
         self.seIdx_path = seIdx_path
         self.is_set_seIdx_path = True
+
+        # check reIdx_path
+        if 0 >= len(reIdx_path):
+            print("[KorLexAPI][INIT] ERR - Plz check reIdx_path:", reIdx_path)
+            return
+        if not os.path.exists(reIdx_path):
+            print("[KorLexAPI][INIT] ERR -", reIdx_path, "is Not Existed !")
+            return
+
+        self.reIdx_path = reIdx_path
+        self.is_set_reIdx_path = True
 
         # Check Json file path
         if 0 >= len(json_path):
@@ -47,69 +59,6 @@ class KorLexAPI:
         ret_result_data = KorLexResult(Target(), [])
         ret_result_data.target.ontology = ontology
 
-        target_word = target_obj["word"]
-        target_soff = target_obj["soff"]
-        target_senseId = target_obj["senseid"]
-        ret_result_data.target.word = target_word
-
-        # search target
-        serach_result_json = self.krx_json[str(target_soff)]
-        syn_pos = serach_result_json["synset_info"]["syn"]["pos"]
-        syn_soff = serach_result_json["synset_info"]["syn"]["soff"]
-        ret_result_data.target.pos = syn_pos
-
-        # Syn word
-        target_syn_word_list = serach_result_json["synset_info"]["word"]
-        target_SS_Node = SS_Node([], soff=syn_soff, pos=syn_pos)
-        for t_syn_word in target_syn_word_list:
-            synset = Synset(sense_id=t_syn_word["senseid"],
-                            seq=t_syn_word["seq"],
-                            text=t_syn_word["text"])
-            target_SS_Node.synset_list.append(copy.deepcopy(synset))
-
-        # pointer info
-        target_pointer_list = serach_result_json["synset_info"]["pointer"]
-        target_parent_list = []
-        for pt_info in target_pointer_list:
-            if "parent" == pt_info["symbol"]:
-                pt_val = int(pt_info["tsoff"])
-                pt_pos = pt_info["tpos"]
-                target_parent_list.append((pt_val, pt_pos))
-
-        for parent_elem in target_parent_list:
-            target_elem = parent_elem
-
-            parent_result = []
-            while True:
-                prev_target_elem = target_elem
-                elem_json = self.krx_json[str(target_elem[0])]
-                elem_syn_word_list = elem_json["synset_info"]["word"]
-                elem_soff = elem_json["synset_info"]["syn"]["soff"]
-                elem_pos = elem_json["synset_info"]["syn"]["pos"]
-
-                if(prev_target_elem[1] == elem_pos):
-                    elem_SS_Node = SS_Node([], soff=elem_soff, pos=elem_pos)
-                    for e_syn_word in elem_syn_word_list:
-                        e_synset = Synset(sense_id=e_syn_word["senseid"],
-                                        seq=e_syn_word["seq"],
-                                        text=e_syn_word["text"])
-                        elem_SS_Node.synset_list.append(copy.deepcopy(e_synset))
-                    parent_result.append(copy.deepcopy(elem_SS_Node))
-
-                elem_pt_list = elem_json["synset_info"]["pointer"]
-                for elem_pt_info in elem_pt_list:
-                    if ("parent" == elem_pt_info["symbol"]) and (prev_target_elem[1] == elem_pt_info["tpos"]):
-                        e_val = int(elem_pt_info["tsoff"])
-                        e_pos = elem_pt_info["tpos"]
-                        target_elem = (e_val, e_pos)
-                if prev_target_elem == target_elem:
-                    print("BRE\n") # TEST
-                    break
-
-            # loop end
-            parent_result.insert(0, target_SS_Node)
-            print(parent_result)
-
         return ret_result_data
 
     ### PUBLIC ###
@@ -124,15 +73,25 @@ class KorLexAPI:
             print("[KorLexAPI][load_json_data] ERR - Plz set seIdx path")
             is_set_json_path = False
 
+        if not self.is_set_reIdx_path:
+            print("[KorLexAPI][load_json_data] ERR - Plz set reIdx path")
+            is_set_json_path = False
+
         if not is_set_json_path: return
 
-        ## Load seIdx.pkl ontology.json files
-        # load w2ss json
+        # Load seIdx.pkl ontology.json files
         print("[KorLexAPI][load_json_data] Loading seIdx.pkl...")
         self.seIdx_df = None
-        with open(self.seIdx_path, mode="rb") as w2ss_file:
-            self.seIdx_df = pickle.load(w2ss_file)
+        with open(self.seIdx_path, mode="rb") as seIdx_file:
+            self.seIdx_df = pickle.load(seIdx_file)
             print("[KorLexAPI][load_json_data] Loaded seIdx.pkl !")
+
+        # Load seIdx.pkl ontology.json files
+        print("[KorLexAPI][load_json_data] Loading reIdx.pkl...")
+        self.reIdx_df = None
+        with open(self.reIdx_path, mode="rb") as reIdx_file:
+            self.reIdx_df = pickle.load(reIdx_file)
+            print("[KorLexAPI][load_json_data] Loaded reIdx.pkl !")
 
         # Load ontology json
         print("[KorLexAPI][load_json_data] Loading ontology json...")
@@ -168,7 +127,15 @@ class KorLexAPI:
 if "__main__" == __name__:
     json_path = "./dic/korlex_all_info.json"
     seIdx_path = "./dic/korlex_seIdx.pkl"
+    reIdx_path = "./dic/korlex_reIdx.pkl"
     krx_json_api = KorLexAPI(json_path=json_path,
-                             seIdx_path=seIdx_path)
+                             seIdx_path=seIdx_path,
+                             reIdx_path=reIdx_path)
     krx_json_api.load_json_data()
+
+    import time
+    start_time = time.time()
     krx_json_api.search_word(word="사과", ontology=ONTOLOGY.KORLEX.value)
+    end_time = time.time()
+
+    print(end_time - start_time)
