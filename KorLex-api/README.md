@@ -103,5 +103,5 @@
     search_wiki_word(word:str, ontology:str)
   ~~~
   
-  - 위 3번의 load_wiki_relation(wiki_rel_path:str)이 
-  
+  - 위 3번의 load_wiki_relation(wiki_rel_path:str)이 선행적으로 사용되어야 한다.
+  - word에 상응하는 pwn 2.0 synset을 찾고 이를 통해 search_synset()을 수행한다.
