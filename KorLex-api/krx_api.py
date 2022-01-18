@@ -1,5 +1,6 @@
 import time
 import pickle
+import pandas as pd
 import numpy as np
 import copy
 import os
@@ -204,14 +205,15 @@ class KorLexAPI:
             print("[KorLexAPI][load_synset_data] Loaded ssInfo.pkl !")
 
     def search_word(self, word:str, ontology=str):
-        ret_json = None
+        ret_json_list = []
 
         if 0 >= len(word):
             print("[KorLexAPI][search_word] ERR - Check input:", word)
-            return ret_json
+            return ret_json_list
 
         if word not in self.seIdx_df["word"].values:
             print("[KorLexAPI][search_word] ERR - Not Existed SE Index Table:", word)
+            return ret_json_list
 
         # Search sibling nodes
         sibling_idx_list = np.where(self.seIdx_df["word"].values == word)
@@ -220,12 +222,77 @@ class KorLexAPI:
             sibling_obj_list.append(copy.deepcopy(self.seIdx_df.loc[sIdx]))
 
         # Make Result Json
-        ret_json_list = []
         for target_obj in sibling_obj_list:
             target_krx_json = self._make_result_json(target_obj=target_obj, ontology=ontology)
             ret_json_list.append(copy.deepcopy(target_krx_json))
 
         return ret_json_list
+
+    def search_synset(self, synset:str, ontology:str):
+        ret_json_list = []
+
+        if 0 >= len(synset):
+            print("[KorLexAPI][search_synset] ERR - Check input:", synset)
+            return ret_json_list
+
+        synset = int(synset)
+        if synset not in self.seIdx_df["soff"].values:
+            print("[KorLexAPI][search_synset] ERR - Not Existed SE Index Table:", synset)
+            return ret_json_list
+
+        # Search sibling nodes
+        sibling_idx_list = np.where(self.seIdx_df["soff"].values == synset)
+        sibling_obj_list = []
+        for sIdx in sibling_idx_list[0]:
+            sibling_obj_list.append(copy.deepcopy(self.seIdx_df.loc[sIdx]))
+
+        # Make Result Json
+        for target_obj in sibling_obj_list:
+            target_krx_json = self._make_result_json(target_obj=target_obj, ontology=ontology)
+            ret_json_list.append(copy.deepcopy(target_krx_json))
+
+        return ret_json_list
+
+    # WIKI
+    def load_wiki_relation(self, wiki_rel_path:str):
+        self.wiki_df = None
+
+        if not os.path.exists(wiki_rel_path):
+            print("[KorLexAPI][load_wiki_relation] ERR - Plz Check wiki_rel_path:", wiki_rel_path)
+            return
+
+        with open(wiki_rel_path, mode="r", encoding="cp949") as wiki_rel_file:
+            word_list = []
+            sysnet_list = []
+            for line in wiki_rel_file.readlines():
+                split_line = line.strip().split(",")
+                sysnet = split_line[0]
+                sysnet_list.append(sysnet)
+
+                word = split_line[-1]
+                word_list.append(word)
+            self.wiki_df = pd.DataFrame((word_list, sysnet_list), index=["word", "synset"]).transpose()
+
+    def search_wiki_word(self, word:str, ontology:str):
+        ret_result_list = []
+
+        if 0 >= len(word):
+            print("[KorLexAPI][search_wiki_word] ERR - Word is NULL word:", word)
+            return ret_result_list
+        if self.wiki_df is None:
+            print("[KorLexAPI][search_wiki_word] ERR - self.wiki_df is None !")
+            return ret_result_list
+
+        # Convert wiki word to synset num
+        target_wiki_rel_list = np.where(self.wiki_df["word"].values == word)
+        for t_wiki_rel_idx in target_wiki_rel_list:
+            for _, wiki_rel_item in self.wiki_df.loc[t_wiki_rel_idx].iterrows():
+                wiki_rel_synset = wiki_rel_item["synset"]
+                wiki_rel_result = self.search_synset(synset=wiki_rel_synset, ontology=ontology)
+                if wiki_rel_result is not None:
+                    ret_result_list.extend(copy.deepcopy(wiki_rel_result))
+
+        return ret_result_list
 
 ### TEST ###
 if "__main__" == __name__:
@@ -237,11 +304,17 @@ if "__main__" == __name__:
                              reIdx_path=reIdx_path)
     krx_json_api.load_synset_data()
 
-    # Check processing time
-    start_time = time.time()
-    results = krx_json_api.search_word(word="사과", ontology=ONTOLOGY.KORLEX.value)
-    for result in results:
-        print(result)
-    end_time = time.time()
+    # test_search_synset = krx_json_api.search_synset(synset="06224165", ontology=ONTOLOGY.KORLEX.value)
 
-    print(end_time - start_time)
+    # if you want to use wiki relation, write below methods
+    wiki_rel_path = "./wiki/pwn2.0_krwiki.txt"
+    krx_json_api.load_wiki_relation(wiki_rel_path=wiki_rel_path)
+
+    start_time = time.time()
+    wiki_rel_result_test = krx_json_api.search_wiki_word(word="물체", ontology=ONTOLOGY.KORLEX.value)
+    end_time = time.time()
+    print("proc time:", end_time - start_time)
+    print(len(wiki_rel_result_test))
+
+
+
