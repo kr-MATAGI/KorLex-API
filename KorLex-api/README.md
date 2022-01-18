@@ -64,3 +64,8 @@
   ~~~  
 
 ## Method
+  - krx_api_의 사용순서는 아래와 같이 사용한다.
+    
+    1) KorLexAPI(ssInfo_path="", seIdx_path="", reIdx="")를 통해 \*.pkl의 경로를 설정하며 인스턴스를 생성한다.
+    2) KorLexAPI.load_synset_data를 통해 (1)에서 설정한 경로의 \*.pkl을 메모리에 적재한다.
+    3) KorLexAPI.search_word(word="", ontology="")를 통해서 검색을 하고 결과를 반환받는다.
