@@ -52,6 +52,28 @@ class KorLexAPI:
         print("[KorLexAPI][INIT] - Complete set to path,", self.ssInfo_path,
               "you can use load method.")
 
+    def _make_sibling_list(self, soff:int, pos:str):
+        ret_sibling_list = []
+
+        target_re_idx_list = np.where((self.reIdx_df["elem"].values == soff) &
+                                        (self.reIdx_df["relation"].values == "child") &
+                                        (self.reIdx_df["trg_pos"].values == pos))
+        for t_elem_re_idx in target_re_idx_list:
+            for _, reIdx_item in self.reIdx_df.loc[t_elem_re_idx].iterrows():
+                trg_elem = reIdx_item["trg_elem"]
+                trg_elem_seIdx_list = np.where((self.seIdx_df["soff"].values == trg_elem) &
+                                               (self.seIdx_df["pos"].values == pos))
+
+                for t_elem_se_idx in trg_elem_seIdx_list:
+                    se_ss_node = SS_Node([], soff=trg_elem, pos=pos)
+                    for _, seIdx_item in self.seIdx_df.loc[t_elem_se_idx].iterrows():
+                        se_synset = Synset(text=seIdx_item["word"],
+                                           sense_id=seIdx_item["senseid"])
+                        se_ss_node.synset_list.append(copy.deepcopy(se_synset))
+                    ret_sibling_list.append(copy.deepcopy(se_ss_node))
+
+        return ret_sibling_list
+
     def _make_result_json(self, target_obj:object, ontology:str):
         ret_korlex_result_list = []
 
@@ -94,13 +116,18 @@ class KorLexAPI:
                                                   word=target_obj["word"],
                                                   pos=target_obj["pos"],
                                                   sense_id=target_obj["senseid"],
-                                                  soff=target_obj["soff"]), [])
+                                                  soff=target_obj["soff"]), [], [])
 
-            # Search processing
+            ## Search processing
             curr_target = (target_parent[0], target_parent[-1])
+
+            # search sibling for target
+            sibling_list = self._make_sibling_list(soff=curr_target[0], pos=curr_target[-1])
+            result_data.siblings = copy.deepcopy(sibling_list)
+
+            # search loop
             while True:
                 prev_target = copy.deepcopy(curr_target)
-
 
                 # Search synset
                 ss_node = SS_Node(synset_list=[], soff=curr_target[0], pos=curr_target[-1])
@@ -213,7 +240,8 @@ if "__main__" == __name__:
     # Check processing time
     start_time = time.time()
     results = krx_json_api.search_word(word="사과", ontology=ONTOLOGY.KORLEX.value)
-    print(results)
+    for result in results:
+        print(result)
     end_time = time.time()
 
     print(end_time - start_time)

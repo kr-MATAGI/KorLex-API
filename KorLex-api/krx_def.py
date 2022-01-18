@@ -87,3 +87,4 @@ class SS_Node:
 class KorLexResult:
     target: Target()
     results: list() # SS_Node
+    siblings: list() # SS_Node
