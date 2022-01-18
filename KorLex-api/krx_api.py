@@ -138,43 +138,43 @@ class KorLexAPI:
         return ret_korlex_result_list
 
     ### PUBLIC ###
-    def load_json_data(self):
-        print("[KorLexAPI][load_json_data] Load JSON Data, Wait...")
+    def load_synset_data(self):
+        print("[KorLexAPI][load_synset_data] Load JSON Data, Wait...")
         is_set_pkl_files = True
         if not self.is_set_ssInfo_path:
-            print("[KorLexAPI][load_json_data] ERR - Plz set json path")
+            print("[KorLexAPI][load_synset_data] ERR - Plz set json path")
             is_set_pkl_files = False
 
         if not self.is_set_seIdx_path:
-            print("[KorLexAPI][load_json_data] ERR - Plz set seIdx path")
+            print("[KorLexAPI][load_synset_data] ERR - Plz set seIdx path")
             is_set_pkl_files = False
 
         if not self.is_set_reIdx_path:
-            print("[KorLexAPI][load_json_data] ERR - Plz set reIdx path")
+            print("[KorLexAPI][load_synset_data] ERR - Plz set reIdx path")
             is_set_pkl_files = False
 
         if not is_set_pkl_files: return
 
         # Load seIdx.pkl
-        print("[KorLexAPI][load_json_data] Loading seIdx.pkl...")
+        print("[KorLexAPI][load_synset_data] Loading seIdx.pkl...")
         self.seIdx_df = None
         with open(self.seIdx_path, mode="rb") as seIdx_file:
             self.seIdx_df = pickle.load(seIdx_file)
-            print("[KorLexAPI][load_json_data] Loaded seIdx.pkl !")
+            print("[KorLexAPI][load_synset_data] Loaded seIdx.pkl !")
 
         # Load reIdx.pkl
-        print("[KorLexAPI][load_json_data] Loading reIdx.pkl...")
+        print("[KorLexAPI][load_synset_data] Loading reIdx.pkl...")
         self.reIdx_df = None
         with open(self.reIdx_path, mode="rb") as reIdx_file:
             self.reIdx_df = pickle.load(reIdx_file)
-            print("[KorLexAPI][load_json_data] Loaded reIdx.pkl !")
+            print("[KorLexAPI][load_synset_data] Loaded reIdx.pkl !")
 
         # Load ssInfo
-        print("[KorLexAPI][load_json_data] Loading ssInfo.pkl...")
+        print("[KorLexAPI][load_synset_data] Loading ssInfo.pkl...")
         self.ssInfo_df = None
         with open(self.ssInfo_path, mode="rb") as ssInfo_file:
             self.ssInfo_df = pickle.load(ssInfo_file)
-            print("[KorLexAPI][load_json_data] Loaded ssInfo.pkl !")
+            print("[KorLexAPI][load_synset_data] Loaded ssInfo.pkl !")
 
     def search_word(self, word:str, ontology=str):
         ret_json = None
@@ -208,7 +208,7 @@ if "__main__" == __name__:
     krx_json_api = KorLexAPI(ssInfo_path=ssInfo_path,
                              seIdx_path=seIdx_path,
                              reIdx_path=reIdx_path)
-    krx_json_api.load_json_data()
+    krx_json_api.load_synset_data()
 
     # Check processing time
     start_time = time.time()
