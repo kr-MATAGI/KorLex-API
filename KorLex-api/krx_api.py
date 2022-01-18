@@ -1,16 +1,14 @@
-import pandas as pd
-import json
+import time
 import pickle
 import numpy as np
 import copy
 import os
 
 ## Korlex API Definition
-from korLexDef import *
+from krx_def import *
 
 class KorLexAPI:
     ### PRIVATE ###
-    ### METHOD ###
     def __init__(self, ssInfo_path:str, seIdx_path:str, reIdx_path:str):
         print("[KorLexAPI][INIT] Plz Wait...")
 
@@ -212,7 +210,7 @@ if "__main__" == __name__:
                              reIdx_path=reIdx_path)
     krx_json_api.load_json_data()
 
-    import time
+    # Check processing time
     start_time = time.time()
     results = krx_json_api.search_word(word="사과", ontology=ONTOLOGY.KORLEX.value)
     print(results)
