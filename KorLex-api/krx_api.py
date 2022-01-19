@@ -94,7 +94,7 @@ class KorLexAPI:
                                                   word=target_obj["word"],
                                                   pos=target_obj["pos"],
                                                   sense_id=target_obj["senseid"],
-                                                  soff=target_obj["soff"]), [])
+                                                  soff=target_obj["soff"]), [], [])
 
             ss_node = SS_Node(synset_list=[], soff=target_obj["soff"], pos=target_obj["pos"])
             seIdx_matching_list = np.where(self.seIdx_df["soff"].values == ss_node.soff)
@@ -121,6 +121,19 @@ class KorLexAPI:
 
             ## Search processing
             curr_target = (target_parent[0], target_parent[-1])
+
+            # current target synset
+            curr_ss_node = SS_Node(synset_list=[], soff=target_obj["soff"], pos=target_obj["pos"])
+            curr_se_matcing_list = np.where((self.seIdx_df["soff"].values == target_obj["soff"]) &
+                                            (self.seIdx_df["pos"].values == target_obj["pos"]))
+
+            for curr_se_idx in curr_se_matcing_list:
+                for _, curr_se_item in self.seIdx_df.loc[curr_se_idx].iterrows():
+                    curr_seIdx_word = curr_se_item["word"]
+                    curr_seIdx_senseId = curr_se_item["senseid"]
+                    curr_synset_data = Synset(text=curr_seIdx_word, sense_id=curr_seIdx_senseId)
+                    curr_ss_node.synset_list.append(copy.deepcopy(curr_synset_data))
+            result_data.results.append(curr_ss_node)
 
             # search sibling for target
             sibling_list = self._make_sibling_list(soff=curr_target[0], pos=curr_target[-1])
@@ -312,14 +325,14 @@ if "__main__" == __name__:
                              reIdx_path=reIdx_path)
     krx_json_api.load_synset_data()
 
-    # test_search_synset = krx_json_api.search_synset(synset="06224165", ontology=ONTOLOGY.KORLEX.value)
+    #test_search_synset = krx_json_api.search_word(word="먹다", ontology=ONTOLOGY.KORLEX.value)
 
     # if you want to use wiki relation, write below methods
     wiki_rel_path = "./wiki/pwn2.0_krwiki.txt"
     krx_json_api.load_wiki_relation(wiki_rel_path=wiki_rel_path)
 
     start_time = time.time()
-    target_result, related_result = krx_json_api.search_wiki_word(word="물체", ontology=ONTOLOGY.KORLEX.value)
+    target_result, related_result = krx_json_api.search_wiki_word(word="의사", ontology=ONTOLOGY.KORLEX.value)
     end_time = time.time()
 
     for t_r in target_result:
