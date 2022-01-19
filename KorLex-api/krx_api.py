@@ -274,25 +274,33 @@ class KorLexAPI:
             self.wiki_df = pd.DataFrame((word_list, sysnet_list), index=["word", "synset"]).transpose()
 
     def search_wiki_word(self, word:str, ontology:str):
-        ret_result_list = []
+        ret_target_list = []
+        ret_related_list = []
 
         if 0 >= len(word):
             print("[KorLexAPI][search_wiki_word] ERR - Word is NULL word:", word)
-            return ret_result_list
+            return ret_target_list, ret_related_list
         if self.wiki_df is None:
             print("[KorLexAPI][search_wiki_word] ERR - self.wiki_df is None !")
-            return ret_result_list
+            return ret_target_list, ret_related_list
 
         # Convert wiki word to synset num
+        total_result_list = []
         target_wiki_rel_list = np.where(self.wiki_df["word"].values == word)
         for t_wiki_rel_idx in target_wiki_rel_list:
             for _, wiki_rel_item in self.wiki_df.loc[t_wiki_rel_idx].iterrows():
                 wiki_rel_synset = wiki_rel_item["synset"]
                 wiki_rel_result = self.search_synset(synset=wiki_rel_synset, ontology=ontology)
                 if wiki_rel_result is not None:
-                    ret_result_list.extend(copy.deepcopy(wiki_rel_result))
+                    total_result_list.extend(copy.deepcopy(wiki_rel_result))
 
-        return ret_result_list
+        for result in total_result_list:
+            if word == result[0].target.word:
+                ret_target_list.extend(copy.deepcopy(result))
+            else:
+                ret_related_list.extend(copy.deepcopy(result))
+
+        return ret_target_list, ret_related_list
 
 ### TEST ###
 if "__main__" == __name__:
@@ -311,10 +319,13 @@ if "__main__" == __name__:
     krx_json_api.load_wiki_relation(wiki_rel_path=wiki_rel_path)
 
     start_time = time.time()
-    wiki_rel_result_test = krx_json_api.search_wiki_word(word="물체", ontology=ONTOLOGY.KORLEX.value)
+    target_result, related_result = krx_json_api.search_wiki_word(word="물체", ontology=ONTOLOGY.KORLEX.value)
     end_time = time.time()
+
+    for t_r in target_result:
+        print(t_r)
+    print()
+    for r_r in related_result:
+        print(r_r)
+
     print("proc time:", end_time - start_time)
-    print(len(wiki_rel_result_test))
-
-
-
