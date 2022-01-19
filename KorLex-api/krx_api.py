@@ -108,6 +108,10 @@ class KorLexAPI:
                         synset_data = Synset(text=seIdx_word, sense_id=seIdx_senseId)
                         ss_node.synset_list.append(copy.deepcopy(synset_data))
             result_data.results.append(ss_node)
+
+            sibling_list = self._make_sibling_list(soff=target_obj["soff"], pos=target_obj["pos"])
+            result_data.siblings = copy.deepcopy(sibling_list)
+
             ret_korlex_result_list.append(result_data)
 
         # Existed Parent
@@ -325,7 +329,10 @@ if "__main__" == __name__:
                              reIdx_path=reIdx_path)
     krx_json_api.load_synset_data()
 
-    #test_search_synset = krx_json_api.search_word(word="먹다", ontology=ONTOLOGY.KORLEX.value)
+    test_search_synset = krx_json_api.search_word(word="먹다", ontology=ONTOLOGY.KORLEX.value)
+    for t_s in test_search_synset:
+        print(t_s)
+    exit()
 
     # if you want to use wiki relation, write below methods
     wiki_rel_path = "./wiki/pwn2.0_krwiki.txt"
