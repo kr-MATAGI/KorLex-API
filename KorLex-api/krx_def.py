@@ -78,13 +78,13 @@ class Target:
     sense_id: str = ""
     pos: str = ""
     soff: int = -1
-    super_num: str = "00"
+    std_num: str = "00"
 
 @dataclass
 class Synset:
     text: str = ""
     sense_id: str = ""
-    super_num: str = "00"
+    std_num: str = "00"
 
 @dataclass
 class SS_Node:

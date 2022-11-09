@@ -162,24 +162,24 @@ class KorLexDB_Utils:
         korean_list = []
         sense_id_list = []
         std_idx_list = []
-        super_num_list: List[str] = [] # fldStdidx1
+        std_num_list: List[str] = [] # fldStdidx1
         for idx, row in kwn_std_rows.iterrows():
             soff = row["fldSynsetOffset"]
             ss_type = row["fldSsType"]
             korean = row["fldKorean"]
             sense_id = row["fldSenseId"]
             std_idx = row["fldStdidx"]
-            super_num = row["fldStdidx1"]
+            std_num = row["fldStdidx1"]
 
             soff_list.append(soff)
             ss_type_list.append(ss_type)
             korean_list.append(korean)
             sense_id_list.append(sense_id)
             std_idx_list.append(std_idx)
-            super_num_list.append(str(super_num) if -1 != super_num else "00")
+            std_num_list.append(str(std_num) if -1 != std_num else "00")
 
-        make_list_set = (soff_list, ss_type_list, korean_list, sense_id_list, std_idx_list, super_num_list)
-        index_title = ["soff", "ss_type", "korean", "senseid", "std_idx", "super_num"]
+        make_list_set = (soff_list, ss_type_list, korean_list, sense_id_list, std_idx_list, std_num_list)
+        index_title = ["soff", "ss_type", "korean", "senseid", "std_idx", "std_num"]
         kwn_std_df = pd.DataFrame(make_list_set, index=index_title).transpose()
         return kwn_std_df
 
@@ -257,7 +257,7 @@ if "__main__" == __name__:
 
     krx_db_util.make_mapping_kwn_std(mdb_path=mdb_path,
                                      dest_path="./dic")
-    exit()
+
     krx_db_util.make_seIndex_dictionary(mdb_path=mdb_path,
                                         dest_path="./dic",
                                         ontology=ONTOLOGY.KORLEX.value)

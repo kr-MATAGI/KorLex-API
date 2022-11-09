@@ -83,16 +83,16 @@ class KorLexAPI:
                     se_ss_node = SS_Node([], soff=trg_elem, pos=pos)
                     for _, seIdx_item in self.seIdx_df.loc[t_elem_se_idx].iterrows():
                         # update - 2022.11.09
-                        curr_super_num = "00"  # update - 2022.11.09
-                        target_super_num_list = np.where((self.kwn_std_df["soff"].values == seIdx_item["soff"]) &
+                        curr_std_num = "00"  # update - 2022.11.09
+                        target_std_num_list = np.where((self.kwn_std_df["soff"].values == seIdx_item["soff"]) &
                                                          (self.kwn_std_df["korean"].values == seIdx_item["word"]) &
                                                          (self.kwn_std_df["senseid"].values == seIdx_item["senseid"]))
-                        if 0 < len(target_super_num_list[0]):
-                            curr_super_num = self.kwn_std_df.loc[target_super_num_list[0]]["super_num"].values[0]
+                        if 0 < len(target_std_num_list[0]):
+                            curr_std_num = self.kwn_std_df.loc[target_std_num_list[0]]["std_num"].values[0]
 
                         se_synset = Synset(text=seIdx_item["word"],
                                            sense_id=seIdx_item["senseid"],
-                                           super_num=curr_super_num)
+                                           std_num=curr_std_num)
                         se_ss_node.synset_list.append(copy.deepcopy(se_synset))
                     ret_sibling_list.append(copy.deepcopy(se_ss_node))
 
@@ -113,19 +113,19 @@ class KorLexAPI:
                     target_parent_list.append((pt_elem, pt_pos))
 
         if 0 >= len(target_parent_list): # Except (e.g. eat(convert to korean))
-            target_super_num = "00"  # update - 2022.11.09
-            target_super_num_list = np.where((self.kwn_std_df["soff"].values == target_obj["soff"]) &
+            target_std_num = "00"  # update - 2022.11.09
+            target_std_num_list = np.where((self.kwn_std_df["soff"].values == target_obj["soff"]) &
                                              (self.kwn_std_df["korean"].values == target_obj["word"]) &
                                              (self.kwn_std_df["senseid"].values == target_obj["senseid"]))
-            if 0 < len(target_super_num_list[0]):
-                target_super_num = self.kwn_std_df.loc[target_super_num_list[0]]["super_num"].values[0]
+            if 0 < len(target_std_num_list[0]):
+                target_std_num = self.kwn_std_df.loc[target_std_num_list[0]]["std_num"].values[0]
 
             result_data = KorLexResult(Target(ontology=ontology,
                                               word=target_obj["word"],
                                               pos=target_obj["pos"],
                                               sense_id=target_obj["senseid"],
                                               soff=target_obj["soff"],
-                                              super_num=target_super_num
+                                              std_num=target_std_num
                                               ), results=[], siblings=[])
 
             ss_node = SS_Node(synset_list=[], soff=target_obj["soff"], pos=target_obj["pos"])
@@ -137,16 +137,16 @@ class KorLexAPI:
                     seIdx_senseId = seIdx_item["senseid"]
 
                     if seIdx_pos == target_obj["pos"]:
-                        seIdx_super_num = "00"  # update - 2022.11.09
-                        target_super_num_list = np.where((self.kwn_std_df["soff"].values == seIdx_item["soff"]) &
+                        seIdx_std_num = "00"  # update - 2022.11.09
+                        target_std_num_list = np.where((self.kwn_std_df["soff"].values == seIdx_item["soff"]) &
                                                          (self.kwn_std_df["korean"].values == seIdx_item["word"]) &
                                                          (self.kwn_std_df["senseid"].values == seIdx_item["senseid"]))
-                        if 0 < len(target_super_num_list[0]):
-                            seIdx_super_num = self.kwn_std_df.loc[target_super_num_list[0]]["super_num"].values[0]
+                        if 0 < len(target_std_num_list[0]):
+                            seIdx_std_num = self.kwn_std_df.loc[target_std_num_list[0]]["std_num"].values[0]
 
                         synset_data = Synset(text=seIdx_word,
                                              sense_id=seIdx_senseId,
-                                             super_num=seIdx_super_num)
+                                             std_num=seIdx_std_num)
                         ss_node.synset_list.append(copy.deepcopy(synset_data))
             result_data.results.append(ss_node)
 
@@ -158,19 +158,19 @@ class KorLexAPI:
         # Existed Parent
         for target_parent in target_parent_list:
             # set target info
-            target_super_num = "00"  # update - 2022.11.09
-            target_super_num_list = np.where((self.kwn_std_df["soff"].values == target_obj["soff"]) &
+            target_std_num = "00"  # update - 2022.11.09
+            target_std_num_list = np.where((self.kwn_std_df["soff"].values == target_obj["soff"]) &
                                              (self.kwn_std_df["korean"].values == target_obj["word"]) &
                                              (self.kwn_std_df["senseid"].values == target_obj["senseid"]))
-            if 0 < len(target_super_num_list[0]):
-                target_super_num = self.kwn_std_df.loc[target_super_num_list[0]]["super_num"].values[0]
+            if 0 < len(target_std_num_list[0]):
+                target_std_num = self.kwn_std_df.loc[target_std_num_list[0]]["std_num"].values[0]
 
             result_data = KorLexResult(Target(ontology=ontology,
                                               word=target_obj["word"],
                                               pos=target_obj["pos"],
                                               sense_id=target_obj["senseid"],
                                               soff=target_obj["soff"],
-                                              super_num=target_super_num
+                                              std_num=target_std_num
                                               ), results=[], siblings=[])
 
             ## Search processing
@@ -187,16 +187,16 @@ class KorLexAPI:
                     curr_seIdx_senseId = curr_se_item["senseid"]
 
                     # update - 2022.11.09
-                    curr_super_num = "00"  # update - 2022.11.09
-                    target_super_num_list = np.where((self.kwn_std_df["soff"].values == curr_se_item["soff"]) &
+                    curr_std_num = "00"  # update - 2022.11.09
+                    target_std_num_list = np.where((self.kwn_std_df["soff"].values == curr_se_item["soff"]) &
                                                      (self.kwn_std_df["korean"].values == curr_se_item["word"]) &
                                                      (self.kwn_std_df["senseid"].values == curr_se_item["senseid"]))
-                    if 0 < len(target_super_num_list[0]):
-                        curr_super_num = self.kwn_std_df.loc[target_super_num_list[0]]["super_num"].values[0]
+                    if 0 < len(target_std_num_list[0]):
+                        curr_std_num = self.kwn_std_df.loc[target_std_num_list[0]]["std_num"].values[0]
 
                     curr_synset_data = Synset(text=curr_seIdx_word,
                                               sense_id=curr_seIdx_senseId,
-                                              super_num=curr_super_num)
+                                              std_num=curr_std_num)
                     curr_ss_node.synset_list.append(copy.deepcopy(curr_synset_data))
             result_data.results.append(curr_ss_node)
 
@@ -219,17 +219,17 @@ class KorLexAPI:
 
                         if seIdx_pos == curr_target[-1]:
                             # update - 2022.11.09
-                            curr_super_num = "00"  # update - 2022.11.09
-                            target_super_num_list = np.where((self.kwn_std_df["soff"].values == seIdx_item["soff"]) &
+                            curr_std_num = "00"  # update - 2022.11.09
+                            target_std_num_list = np.where((self.kwn_std_df["soff"].values == seIdx_item["soff"]) &
                                                              (self.kwn_std_df["korean"].values == seIdx_item["word"]) &
                                                              (self.kwn_std_df["senseid"].values == seIdx_item[
                                                                  "senseid"]))
-                            if 0 < len(target_super_num_list[0]):
-                                curr_super_num = self.kwn_std_df.loc[target_super_num_list[0]]["super_num"].values[0]
+                            if 0 < len(target_std_num_list[0]):
+                                curr_std_num = self.kwn_std_df.loc[target_std_num_list[0]]["std_num"].values[0]
 
                             synset_data = Synset(text=seIdx_word,
                                                  sense_id=seIdx_senseId,
-                                                 super_num=curr_super_num)
+                                                 std_num=curr_std_num)
                             ss_node.synset_list.append(copy.deepcopy(synset_data))
 
                 if 0 >= len(ss_node.synset_list):
@@ -415,7 +415,7 @@ if "__main__" == __name__:
     krx_json_api.load_synset_data()
 
     start_time = time.time()
-    test_search_synset = krx_json_api.search_word(word="사과", ontology=ONTOLOGY.KORLEX.value)
+    test_search_synset = krx_json_api.search_word(word="차", ontology=ONTOLOGY.KORLEX.value)
     end_time = time.time()
     print("proc time:", end_time - start_time)
     for t_s in test_search_synset:
