@@ -37,9 +37,20 @@
       sense_id:str
       pos:str
       soff:str
+      super_num:str
   ~~~
   
-  **2. SS_Node**
+  **2. Synset**
+  - super_num이 "00"일 경우 어깨 번호가 없음
+  ~~~java
+    @dataclass
+    class Synset:
+      text: str = ""
+      sense_id: str = ""
+      super_num: str = "00"
+  ~~~
+
+  **3. SS_Node**
   
   - synset 관계를 표현하기 위한 구조체, synset_list에는 같은 soff를 가지는 word들이 들어간다.
   
@@ -51,7 +62,7 @@
       pos:str
   ~~~
   
-  **3. KorLexresult**
+  **4. KorLexresult**
   
   - 동음이의어 하나당 만들어지는 결과에 대한 구조체
   - results, siblings에는 SS_Node를 요소로 가진다.
