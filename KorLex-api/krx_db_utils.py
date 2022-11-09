@@ -1,6 +1,7 @@
 import pyodbc # MS Access (*.mdb)
 import pandas as pd
 import pickle
+from typing import List
 
 ## KorLex API Definition
 from krx_def import *
@@ -143,10 +144,50 @@ class KorLexDB_Utils:
         ss_info_df = pd.DataFrame(make_list_set, index=["pos", "soff", "lexFn"]).transpose()
         return ss_info_df
 
+    def _make_mapping_kwn_std_dict(self, conn: pyodbc.Connection=None):
+        if conn is None:
+            if conn is None:
+                print("[_make_mapping_kwn_std_dict] conn is NULL")
+            else:
+                print("[_make_mapping_kwn_std_dict] ontology is NULL")
+            return
+
+        # query
+        query = KORLEX_QUERY.ALL_MAPPING_KWN_STD_BY_ONTOLOGY.value
+        kwn_std_rows = pd.read_sql_query(query, conn)
+
+        # Make Simple
+        soff_list = []
+        ss_type_list = []
+        korean_list = []
+        sense_id_list = []
+        std_idx_list = []
+        super_num_list: List[str] = [] # fldStdidx1
+        for idx, row in kwn_std_rows.iterrows():
+            soff = row["fldSynsetOffset"]
+            ss_type = row["fldSsType"]
+            korean = row["fldKorean"]
+            sense_id = row["fldSenseId"]
+            std_idx = row["fldStdidx"]
+            super_num = row["fldStdidx1"]
+
+            soff_list.append(soff)
+            ss_type_list.append(ss_type)
+            korean_list.append(korean)
+            sense_id_list.append(sense_id)
+            std_idx_list.append(std_idx)
+            super_num_list.append(str(super_num) if -1 != super_num else "00")
+
+        make_list_set = (soff_list, ss_type_list, korean_list, sense_id_list, std_idx_list, super_num_list)
+        index_title = ["soff", "ss_type", "korean", "senseid", "std_idx", "super_num"]
+        kwn_std_df = pd.DataFrame(make_list_set, index=index_title).transpose()
+        return kwn_std_df
+
     ### PULBIC ###
     def make_seIndex_dictionary(self, mdb_path:str,
                                 dest_path:str,
                                 ontology:str=ONTOLOGY.KORLEX.value):
+        print("[krx_db_utils][make_seIndex_dictionary] - START -")
         # DB Connect
         conn, cursor = self._local_db_connect(mdb_path=mdb_path)
 
@@ -157,11 +198,13 @@ class KorLexDB_Utils:
         seIdx_file = ontology.lower() + "_seIdx.pkl"
         with open(dest_path + "/" + seIdx_file, mode="wb") as outfile:
             pickle.dump(seIdx_df, outfile)
+            print("[krx_db_utils][make_seIndex_dictionary] - Save File -")
+        print("[krx_db_utils][make_seIndex_dictionary] - Complete -")
 
     def make_rel_index_dictionary(self, mdb_path:str,
                                   dest_path:str,
                                   ontology:str=ONTOLOGY.KORLEX.value):
-
+        print("[krx_db_utils][make_rel_index_dictionary] - START -")
         # DB Connect
         conn, cursor = self._local_db_connect(mdb_path=mdb_path)
         # make rel_idx_df
@@ -170,11 +213,13 @@ class KorLexDB_Utils:
         rel_idx_file = ontology.lower() + "_reIdx.pkl"
         with open(dest_path + "/" + rel_idx_file, mode="wb") as outfile:
             pickle.dump(rel_idx_df, outfile)
+            print("[krx_db_utils][make_rel_index_dictionary] - Save File -")
+        print("[krx_db_utils][make_rel_index_dictionary] - Complete -")
 
     def make_ss_info_dictionary(self, mdb_path:str,
                                 dest_path:str,
                                 ontology:str=ONTOLOGY.KORLEX.value):
-
+        print("[krx_db_utils][make_ss_info_dictionary] - START -")
         # DB Connect
         conn, cursor = self._local_db_connect(mdb_path=mdb_path)
 
@@ -184,12 +229,35 @@ class KorLexDB_Utils:
         ss_info_file = ontology.lower() + "_ssInfo.pkl"
         with open(dest_path + "/" + ss_info_file, mode="wb") as outfile:
             pickle.dump(ss_info_df, outfile)
+            print("[krx_db_utils][make_ss_info_dictionary] - Save File -")
+        print("[krx_db_utils][make_ss_info_dictionary] - Complete -")
+
+    def make_mapping_kwn_std(self, mdb_path: str,
+                             dest_path: str,
+                             ontology:str=ONTOLOGY.KORLEX.value):
+        print("[krx_db_utils][make_mapping_kwn_std] - START -")
+        # DB Connect
+        conn, cursor = self._local_db_connect(mdb_path=mdb_path)
+
+        # make kwn_std_df
+        kwn_std_df = self._make_mapping_kwn_std_dict(conn=conn)
+
+        # save pkl file
+        kwn_std_file = ontology.lower() + "_kwn_std.pkl"
+        with open(dest_path + "/" + kwn_std_file, mode="wb") as outfile:
+            pickle.dump(kwn_std_df, outfile)
+            print("[krx_db_utils][make_mapping_kwn_std] - Save File -")
+        print("[krx_db_utils][make_mapping_kwn_std] - Complete -")
 
 ### TEST ###
 if "__main__" == __name__:
-    mdb_path = "../db/20170726_KorLexDB.mdb"
+    mdb_path = "C:/Users/MATAGI/Desktop/Git/KorLex-API/KorLex-api/db/std_dic.mdb"
 
     krx_db_util = KorLexDB_Utils()
+
+    krx_db_util.make_mapping_kwn_std(mdb_path=mdb_path,
+                                     dest_path="./dic")
+    exit()
     krx_db_util.make_seIndex_dictionary(mdb_path=mdb_path,
                                         dest_path="./dic",
                                         ontology=ONTOLOGY.KORLEX.value)

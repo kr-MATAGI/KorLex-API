@@ -1,5 +1,7 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import List
 from enum import Enum
+
 
 class ONTOLOGY(Enum):
     KORLEX = "KORLEX"
@@ -63,6 +65,11 @@ class KORLEX_QUERY(Enum):
         WHERE fldOntology = '%s';
     """
 
+    ALL_MAPPING_KWN_STD_BY_ONTOLOGY = """
+        SELECT fldSynsetOffset, fldSsType, fldKorean, fldSenseId, fldStdidx, fldStdidx1 FROM
+        tblWN_Mapping_KWN_STD
+    """
+
 
 @dataclass
 class Target:
@@ -71,20 +78,22 @@ class Target:
     sense_id: str = ""
     pos: str = ""
     soff: int = -1
+    super_num: str = "00"
 
 @dataclass
 class Synset:
     text: str = ""
     sense_id: str = ""
+    super_num: str = "00"
 
 @dataclass
 class SS_Node:
-    synset_list: list() # Synset
+    synset_list: List[Synset] = field(default_factory=list) # Synset
     soff: int = -1
     pos: str = ""
 
 @dataclass
 class KorLexResult:
-    target: Target()
-    results: list() # SS_Node
-    siblings: list() # SS_Node
+    target: Target = field(default=Target())
+    results: List[SS_Node] = field(default_factory=list) # SS_Node
+    siblings: List[SS_Node] = field(default_factory=list) # SS_Node
