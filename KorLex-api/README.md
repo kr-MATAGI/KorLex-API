@@ -65,14 +65,14 @@
   **4. KorLexresult**
   
   - 동음이의어 하나당 만들어지는 결과에 대한 구조체
-  - results, siblings에는 SS_Node를 요소로 가진다.
+  - results, hyponym에는 SS_Node를 요소로 가진다.
   
   ~~~java
     @dataclass
     class KorLexResult:
       target: Target()
       results: list()
-      siblings: list()
+      hyponym: list()
   ~~~  
 
 ## Method

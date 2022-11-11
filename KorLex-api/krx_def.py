@@ -11,7 +11,7 @@ class ONTOLOGY(Enum):
     PWN3 = "PWN3.0"
 
 class KORLEX_QUERY(Enum):
-    SEARCH_SIBLING_NODE = """
+    SEARCH_HYPONYM_NODE = """
         SELECT * FROM 
         tblWN_SEIndex 
         WHERE fldWNI_ONTOLOGY = '%s'  
@@ -96,4 +96,4 @@ class SS_Node:
 class KorLexResult:
     target: Target = field(default=Target())
     results: List[SS_Node] = field(default_factory=list) # SS_Node
-    siblings: List[SS_Node] = field(default_factory=list) # SS_Node
+    hyponym: List[SS_Node] = field(default_factory=list) # SS_Node

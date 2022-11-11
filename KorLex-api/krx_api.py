@@ -67,8 +67,8 @@ class KorLexAPI:
         print("[KorLexAPI][INIT] - Complete set to path,", self.ssInfo_path,
               "you can use load method.")
 
-    def _make_sibling_list(self, soff:int, pos:str):
-        ret_sibling_list = []
+    def _make_hyponym_list(self, soff:int, pos:str):
+        ret_hyponym_list = []
 
         target_re_idx_list = np.where((self.reIdx_df["elem"].values == soff) &
                                         (self.reIdx_df["relation"].values == "child") &
@@ -94,9 +94,9 @@ class KorLexAPI:
                                            sense_id=seIdx_item["senseid"],
                                            std_num=curr_std_num)
                         se_ss_node.synset_list.append(copy.deepcopy(se_synset))
-                    ret_sibling_list.append(copy.deepcopy(se_ss_node))
+                    ret_hyponym_list.append(copy.deepcopy(se_ss_node))
 
-        return ret_sibling_list
+        return ret_hyponym_list
 
     def _make_result_json(self, target_obj:object, ontology:str):
         ret_korlex_result_list = []
@@ -126,7 +126,7 @@ class KorLexAPI:
                                               sense_id=target_obj["senseid"],
                                               soff=target_obj["soff"],
                                               std_num=target_std_num
-                                              ), results=[], siblings=[])
+                                              ), results=[], hyponym=[])
 
             ss_node = SS_Node(synset_list=[], soff=target_obj["soff"], pos=target_obj["pos"])
             seIdx_matching_list = np.where(self.seIdx_df["soff"].values == ss_node.soff)
@@ -150,8 +150,8 @@ class KorLexAPI:
                         ss_node.synset_list.append(copy.deepcopy(synset_data))
             result_data.results.append(ss_node)
 
-            sibling_list = self._make_sibling_list(soff=target_obj["soff"], pos=target_obj["pos"])
-            result_data.siblings = copy.deepcopy(sibling_list)
+            hyponym_list = self._make_hyponym_list(soff=target_obj["soff"], pos=target_obj["pos"])
+            result_data.hyponym = copy.deepcopy(hyponym_list)
 
             ret_korlex_result_list.append(result_data)
 
@@ -171,7 +171,7 @@ class KorLexAPI:
                                               sense_id=target_obj["senseid"],
                                               soff=target_obj["soff"],
                                               std_num=target_std_num
-                                              ), results=[], siblings=[])
+                                              ), results=[], hyponym=[])
 
             ## Search processing
             curr_target = (target_parent[0], target_parent[-1])
@@ -200,9 +200,9 @@ class KorLexAPI:
                     curr_ss_node.synset_list.append(copy.deepcopy(curr_synset_data))
             result_data.results.append(curr_ss_node)
 
-            # search sibling for target
-            sibling_list = self._make_sibling_list(soff=curr_target[0], pos=curr_target[-1])
-            result_data.siblings = copy.deepcopy(sibling_list)
+            # search hyponym for target
+            hyponym_list = self._make_hyponym_list(soff=curr_target[0], pos=curr_target[-1])
+            result_data.hyponym = copy.deepcopy(hyponym_list)
 
             # search loop
             while True:
@@ -316,14 +316,14 @@ class KorLexAPI:
             print("[KorLexAPI][search_word] ERR - Not Existed SE Index Table:", word)
             return ret_json_list
 
-        # Search sibling nodes
-        sibling_idx_list = np.where(self.seIdx_df["word"].values == word)
-        sibling_obj_list = []
-        for sIdx in sibling_idx_list[0]:
-            sibling_obj_list.append(copy.deepcopy(self.seIdx_df.loc[sIdx]))
+        # Search hyponym nodes
+        hyponym_idx_list = np.where(self.seIdx_df["word"].values == word)
+        hyponym_obj_list = []
+        for sIdx in hyponym_idx_list[0]:
+            hyponym_obj_list.append(copy.deepcopy(self.seIdx_df.loc[sIdx]))
 
         # Make Result Json
-        for target_obj in sibling_obj_list:
+        for target_obj in hyponym_obj_list:
             target_krx_json = self._make_result_json(target_obj=target_obj, ontology=ontology)
             ret_json_list.append(copy.deepcopy(target_krx_json))
 
@@ -341,14 +341,14 @@ class KorLexAPI:
             print("[KorLexAPI][search_synset] ERR - Not Existed SE Index Table:", synset)
             return ret_json_list
 
-        # Search sibling nodes
-        sibling_idx_list = np.where(self.seIdx_df["soff"].values == synset)
-        sibling_obj_list = []
-        for sIdx in sibling_idx_list[0]:
-            sibling_obj_list.append(copy.deepcopy(self.seIdx_df.loc[sIdx]))
+        # Search hyponym nodes
+        hyponym_idx_list = np.where(self.seIdx_df["soff"].values == synset)
+        hyponym_obj_list = []
+        for sIdx in hyponym_idx_list[0]:
+            hyponym_obj_list.append(copy.deepcopy(self.seIdx_df.loc[sIdx]))
 
         # Make Result Json
-        for target_obj in sibling_obj_list:
+        for target_obj in hyponym_obj_list:
             target_krx_json = self._make_result_json(target_obj=target_obj, ontology=ontology)
             ret_json_list.append(copy.deepcopy(target_krx_json))
 
@@ -415,7 +415,7 @@ if "__main__" == __name__:
     krx_json_api.load_synset_data()
 
     start_time = time.time()
-    test_search_synset = krx_json_api.search_word(word="차", ontology=ONTOLOGY.KORLEX.value)
+    test_search_synset = krx_json_api.search_word(word="일", ontology=ONTOLOGY.KORLEX.value)
     end_time = time.time()
     print("proc time:", end_time - start_time)
     for t_s in test_search_synset:
