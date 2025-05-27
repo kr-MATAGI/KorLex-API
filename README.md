@@ -205,13 +205,7 @@ PORT=3000
  |  \<POINTER symbol="child" tsoff="02692052" tpos="v"/>                     | KorLex 신셋의 의미관계: 하위노드                    |
  | \</SYN>                                                                   |                                               |
   
-## 라이선스
 
-이 프로젝트는 MIT 라이선스 하에 제공됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
-
-## 기여하기
-
-프로젝트에 기여하고 싶으시다면 Pull Request를 보내주세요. 모든 기여는 환영합니다!
 
 ## 문의사항
 
