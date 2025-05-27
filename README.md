@@ -1,3 +1,44 @@
+# KorLex-API
+
+KorLex-API는 한국어 어휘의미망 KorLex 1.5를 쉽게 활용할 수 있도록 제공하는 RESTful API 서비스입니다.
+
+## 소개
+이 프로젝트는 한국어 어휘의미망 KorLex 1.5 데이터베이스를 기반으로 하여, 개발자들이 쉽게 한국어 어휘 관계와 의미 정보를 활용할 수 있도록 돕는 API를 제공합니다.
+
+## 설치 방법
+
+```bash
+# 저장소 클론
+git clone https://github.com/yourusername/KorLex-API.git
+cd KorLex-API
+
+# 의존성 설치
+npm install
+```
+
+## 환경 설정
+
+1. `.env` 파일을 생성하고 다음 환경 변수를 설정합니다:
+```
+DB_HOST=localhost
+DB_USER=your_username
+DB_PASSWORD=your_password
+DB_NAME=korlex
+PORT=3000
+```
+
+2. 데이터베이스 설정을 완료합니다.
+
+## API 사용 방법
+
+### 기본 엔드포인트
+
+- `GET /api/word/{word}`: 특정 단어의 의미 정보 조회
+- `GET /api/synset/{synset_id}`: 특정 신셋 정보 조회
+- `GET /api/relation/{word}`: 단어의 관계 정보 조회
+
+자세한 API 문서는 `/docs` 엔드포인트에서 확인할 수 있습니다.
+
 # KorLex
   "한국어 어휘의미망 KorLex 1.5" 데이터베이스는 아래 그림과 같이 4개의 관계형 테이블로 구성된다.
   
@@ -163,4 +204,16 @@
  |  \<POINTER symbol="child" tsoff="02691569" tpos="v"/>                     | KorLex 신셋의 의미관계: 하위노드                    |
  |  \<POINTER symbol="child" tsoff="02692052" tpos="v"/>                     | KorLex 신셋의 의미관계: 하위노드                    |
  | \</SYN>                                                                   |                                               |
+  
+## 라이선스
+
+이 프로젝트는 MIT 라이선스 하에 제공됩니다. 자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
+
+## 기여하기
+
+프로젝트에 기여하고 싶으시다면 Pull Request를 보내주세요. 모든 기여는 환영합니다!
+
+## 문의사항
+
+문의사항이 있으시다면 이슈를 생성해주세요.
   
